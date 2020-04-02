@@ -16,7 +16,7 @@ namespace Dear_ImGui_Sample
         ImGuiController _controller;
 
         public Window(GraphicsMode gMode) : base(1600, 900, gMode,
-                                    "ImGui Sample!",
+                                    "BLengine",
                                     GameWindowFlags.Default,
                                     DisplayDevice.Default,
                                     4, 6, GraphicsContextFlags.ForwardCompatible)
@@ -42,13 +42,16 @@ namespace Dear_ImGui_Sample
             _controller.WindowResized(Width, Height);
         }
 
+    
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
+
             base.OnRenderFrame(e);
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4(0, 32, 48, 255));
+            GL.ClearColor(new Color4((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime)*2, 0.3f, 1)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
             ImGui.ShowDemoWindow();

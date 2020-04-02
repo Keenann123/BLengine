@@ -12,6 +12,10 @@ namespace Dear_ImGui_Sample
 {
     static class Util
     {
+
+        //The total time since application started
+        public static float TotalTime {get;set;}
+
         [Pure]
         public static float Clamp(float value, float min, float max)
         {
