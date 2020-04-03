@@ -63,9 +63,10 @@ namespace RenderingEngine
             {
                 base.Exit();
             }
+            mesh1.Render();
 
             _controller.Render();
-            mesh1.Render();
+            
             Util.CheckGLError("End of frame");
 
             SwapBuffers();
