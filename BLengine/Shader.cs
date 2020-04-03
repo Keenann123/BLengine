@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using OpenTK.Graphics;
 using System.Threading;
 
-namespace Dear_ImGui_Sample
+namespace RenderingEngine
 {
     struct UniformFieldInfo
     {

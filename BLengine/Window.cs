@@ -9,7 +9,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 
-namespace Dear_ImGui_Sample
+namespace RenderingEngine
 {
     public class Window : GameWindow
     {
@@ -51,7 +51,7 @@ namespace Dear_ImGui_Sample
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4(0.5f, 0.5f, 0.5f, 1.0f)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.5f, 0.5f, 1f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
             //ImGui.ShowDemoWindow(); // remove the demo window

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Dear_ImGui_Sample
+namespace RenderingEngine
 {
     /// <summary>
     /// A modified version of Veldrid.ImGui's ImGuiRenderer.
@@ -80,8 +80,8 @@ namespace Dear_ImGui_Sample
 
             RecreateFontDeviceTexture();
 
-            string VertexSource = @"../Debug/Shaders/default.vert";//      FIXME
-            string FragmentSource = @"../Debug/Shaders/default.frag";//    FIXME
+            string VertexSource = @"../../../Shaders/default_imgui.vert";//      FIXME
+            string FragmentSource = @"../../../Shaders/default_imgui.frag";//    FIXME
 
             _shader = new Shader("ImGui", VertexSource, FragmentSource);
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics;
 
-namespace Dear_ImGui_Sample
+namespace RenderingEngine
 {
     class Program
     {

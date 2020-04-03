@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL4;
 
-namespace Dear_ImGui_Sample
+namespace RenderingEngine
 {
     static class Util
     {

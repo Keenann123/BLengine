@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
-namespace Dear_ImGui_Sample
+namespace RenderingEngine
 {
     public enum TextureCoordinate
     {
