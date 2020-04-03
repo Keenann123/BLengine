@@ -37,7 +37,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Dear_ImGui_Sample.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -104,6 +105,8 @@
     <None Include="App.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+    <None Include="Shaders\default.frag" />
+    <None Include="Shaders\default.vert" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets" Condition="Exists('..\packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" />

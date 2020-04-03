@@ -14,6 +14,7 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
+        Mesh mesh1;
 
         public Window(GraphicsMode gMode) : base(1920, 1080, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
@@ -27,6 +28,7 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            mesh1 = new Mesh();
 
             _controller = new ImGuiController(Width, Height);
         }
@@ -63,7 +65,7 @@ namespace RenderingEngine
             }
 
             _controller.Render();
-
+            mesh1.Render();
             Util.CheckGLError("End of frame");
 
             SwapBuffers();

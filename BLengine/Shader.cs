@@ -154,7 +154,7 @@ namespace RenderingEngine
             Util.CreateShader(type, name, out int Shader);
             GL.ShaderSource(Shader, source);
             GL.CompileShader(Shader);
-
+            
             GL.GetShader(Shader, ShaderParameter.CompileStatus, out int success);
             if (success == 0)
             {
