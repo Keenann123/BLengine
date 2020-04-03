@@ -16,7 +16,7 @@ namespace Dear_ImGui_Sample
         ImGuiController _controller;
 
         public Window(GraphicsMode gMode) : base(1600, 900, gMode,
-                                    "BLengine",
+                                    "Legend286 and Boomer678's Rendering Engine",
                                     GameWindowFlags.Default,
                                     DisplayDevice.Default,
                                     4, 6, GraphicsContextFlags.ForwardCompatible)
@@ -54,7 +54,13 @@ namespace Dear_ImGui_Sample
             GL.ClearColor(new Color4((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime)*2, 0.3f, 1)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-            ImGui.ShowDemoWindow();
+            //ImGui.ShowDemoWindow(); // remove the demo window
+            ImGui.Begin("Window Test");
+            ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
+            if(ImGui.Button("Quit", new System.Numerics.Vector2(100,100)))
+            {
+                base.Exit();
+            }
 
             _controller.Render();
 
