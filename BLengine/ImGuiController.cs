@@ -80,36 +80,9 @@ namespace Dear_ImGui_Sample
 
             RecreateFontDeviceTexture();
 
-            string VertexSource = @"#version 330 core
+            string VertexSource = @"../Debug/Shaders/default.vert";//      FIXME
+            string FragmentSource = @"../Debug/Shaders/default.frag";//    FIXME
 
-uniform mat4 projection_matrix;
-
-in vec2 in_position;
-in vec2 in_texCoord;
-in vec4 in_color;
-
-out vec4 color;
-out vec2 texCoord;
-
-void main()
-{
-    gl_Position = projection_matrix * vec4(in_position, 0, 1);
-    color = in_color;
-    texCoord = in_texCoord;
-}";
-            string FragmentSource = @"#version 330 core
-
-uniform sampler2D in_fontTexture;
-
-in vec4 color;
-in vec2 texCoord;
-
-out vec4 outputColor;
-
-void main()
-{
-    outputColor = color * texture(in_fontTexture, texCoord);
-}";
             _shader = new Shader("ImGui", VertexSource, FragmentSource);
 
             GL.VertexArrayVertexBuffer(_vertexArray, 0, _vertexBuffer, IntPtr.Zero, Unsafe.SizeOf<ImDrawVert>());

@@ -30,7 +30,7 @@ namespace Dear_ImGui_Sample
 
         private (ShaderType Type, string Path)[] Files;
 
-        public Shader(string name, string vertexShader, string fragmentShader)
+/*        public Shader(string name, string vertexShader, string fragmentShader)
         {
             Name = name;
             Files = new[]{
@@ -38,7 +38,31 @@ namespace Dear_ImGui_Sample
                 (ShaderType.FragmentShader, fragmentShader),
             };
             Program = CreateProgram(name, Files);
+        }*/ // old shader shit from string
+
+        public Shader(string name, string vertexPath, string fragmentPath)
+        {
+            string VertexShaderSource;
+            string FragmentShaderSource;
+
+            using (StreamReader reader = new StreamReader(vertexPath, Encoding.UTF8))
+            {
+                VertexShaderSource = reader.ReadToEnd();
+            }
+
+            using (StreamReader reader = new StreamReader(fragmentPath, Encoding.UTF8))
+            {
+                FragmentShaderSource = reader.ReadToEnd();
+            }
+
+            Name = name;
+            Files = new[]{
+                (ShaderType.VertexShader, VertexShaderSource),
+                (ShaderType.FragmentShader, FragmentShaderSource),
+            };
+            Program = CreateProgram(name, Files);
         }
+
         public void UseShader()
         {
             GL.UseProgram(Program);
@@ -55,11 +79,11 @@ namespace Dear_ImGui_Sample
 
         public UniformFieldInfo[] GetUniforms()
         {
-            GL.GetProgram(Program, GetProgramParameterName.ActiveUniforms, out int UnifromCount);
+            GL.GetProgram(Program, GetProgramParameterName.ActiveUniforms, out int UniformCount);
 
-            UniformFieldInfo[] Uniforms = new UniformFieldInfo[UnifromCount];
+            UniformFieldInfo[] Uniforms = new UniformFieldInfo[UniformCount];
 
-            for (int i = 0; i < UnifromCount; i++)
+            for (int i = 0; i < UniformCount; i++)
             {
                 string Name = GL.GetActiveUniform(Program, i, out int Size, out ActiveUniformType Type);
 

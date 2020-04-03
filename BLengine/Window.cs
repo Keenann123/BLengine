@@ -15,7 +15,7 @@ namespace Dear_ImGui_Sample
     {
         ImGuiController _controller;
 
-        public Window(GraphicsMode gMode) : base(1600, 900, gMode,
+        public Window(GraphicsMode gMode) : base(1920, 1080, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
                                     GameWindowFlags.Default,
                                     DisplayDevice.Default,
@@ -51,7 +51,7 @@ namespace Dear_ImGui_Sample
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime)*2, 0.3f, 1)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.5f, 0.5f, 0.5f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
             //ImGui.ShowDemoWindow(); // remove the demo window
