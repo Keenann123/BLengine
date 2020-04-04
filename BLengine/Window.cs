@@ -30,7 +30,7 @@ namespace RenderingEngine
         {
             base.OnLoad(e);
             mesh1 = new Mesh();
-            tex = new Texture("../../../Textures/test.png");
+            tex = new Texture("Textures/test.png");
             _controller = new ImGuiController(Width, Height);            
         }
 
