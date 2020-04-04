@@ -57,14 +57,14 @@ namespace RenderingEngine
             GL.ClearColor(new Color4(0.5f, 0.5f, 1f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-            //ImGui.ShowDemoWindow(); // remove the demo window
+          //ImGui.ShowDemoWindow(); // remove the demo window
             ImGui.Begin("Window Test");
             ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
             if(ImGui.Button("Quit", new System.Numerics.Vector2(100,100)))
             {
                 base.Exit();
             }
-            
+           // tex.UseTexture();
             mesh1.Render();
 
             _controller.Render();

@@ -16,7 +16,8 @@ namespace RenderingEngine
 
         public Texture(string filename)
         {
-            handle = GL.GenTexture();
+            GL.Enable(EnableCap.Texture2D);
+            GL.GenTextures(1, out handle);
 
             //Load the image
             Image<Rgba32> image = Image.Load<Rgba32>(filename);
@@ -38,9 +39,8 @@ namespace RenderingEngine
                 pixels.Add(p.B);
                 pixels.Add(p.A);
             }
-
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
-            UseTexture();
+            
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, pixels.ToArray());
         }
 
         public void UseTexture()

@@ -33,7 +33,7 @@ namespace RenderingEngine
 
         public Mesh()
         {
-            shader = new Shader("Default", "../../../Shaders/default.vert" ,"../../../Shaders/default.frag");
+            shader = new Shader("Default", "Shaders/default.vert" ,"Shaders/default.frag");
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();

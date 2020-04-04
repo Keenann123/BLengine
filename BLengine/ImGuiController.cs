@@ -80,8 +80,8 @@ namespace RenderingEngine
 
             RecreateFontDeviceTexture();
 
-            string VertexSource = "../../../Shaders/default_imgui.vert";//      FIXME
-            string FragmentSource = "../../../Shaders/default_imgui.frag";//    FIXME
+            string VertexSource = "Shaders/default_imgui.vert";//      FIXED 04/04/20 17:31 GMT+1
+            string FragmentSource = "Shaders/default_imgui.frag";//    FIXED 04/04/20 17:31 GMT+1
 
             _shader = new Shader("ImGui", VertexSource, FragmentSource);
 
