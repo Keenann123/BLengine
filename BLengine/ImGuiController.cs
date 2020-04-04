@@ -23,7 +23,7 @@ namespace RenderingEngine
         private int _indexBuffer;
         private int _indexBufferSize;
 
-        private Texture _fontTexture;
+        private ImGuiTexture _fontTexture;
         private Shader _shader;
         
         private int _windowWidth;
@@ -111,7 +111,7 @@ namespace RenderingEngine
             ImGuiIOPtr io = ImGui.GetIO();
             io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out int bytesPerPixel);
 
-            _fontTexture = new Texture("ImGui Text Atlas", width, height, pixels);
+            _fontTexture = new ImGuiTexture("ImGui Text Atlas", width, height, pixels);
             _fontTexture.SetMagFilter(TextureMagFilter.Linear);
             _fontTexture.SetMinFilter(TextureMinFilter.Linear);
             

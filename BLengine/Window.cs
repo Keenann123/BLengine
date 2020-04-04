@@ -17,7 +17,7 @@ namespace RenderingEngine
         Mesh mesh1;
         Texture tex;
 
-        public Window(GraphicsMode gMode) : base(1920, 1080, gMode,
+        public Window(GraphicsMode gMode) : base(1280, 720, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
                                     GameWindowFlags.Default,
                                     DisplayDevice.Default,
@@ -30,10 +30,8 @@ namespace RenderingEngine
         {
             base.OnLoad(e);
             mesh1 = new Mesh();
-
-            _controller = new ImGuiController(Width, Height);
-            tex = new Texture("test", "../../../Textures/test.png", false, false);
-            
+            tex = new Texture("../../../Textures/test.png");
+            _controller = new ImGuiController(Width, Height);            
         }
 
         protected override void OnResize(EventArgs e)
@@ -45,7 +43,6 @@ namespace RenderingEngine
 
             // Tell ImGui of the new size
             _controller.WindowResized(Width, Height);
-            tex.Use();
         }
 
     

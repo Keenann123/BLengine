@@ -119,13 +119,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Texture.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="ImGuiController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shader.cs" />
-    <Compile Include="Texture.cs" />
+    <Compile Include="ImGuiTexture.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>

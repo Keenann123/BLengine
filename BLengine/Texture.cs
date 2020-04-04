@@ -1,11 +1,8 @@
-﻿using OpenTK;
-using OpenTK.Graphics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL4;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Collections.Generic;
-using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Advanced;
@@ -13,122 +10,22 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RenderingEngine
 {
-    public enum TextureCoordinate
+    class Texture
     {
-        S = TextureParameterName.TextureWrapS,
-        T = TextureParameterName.TextureWrapT,
-        R = TextureParameterName.TextureWrapR
-    }
+        int handle;
 
-    class Texture : IDisposable
-    {
-        public const SizedInternalFormat Srgb8Alpha8 = (SizedInternalFormat)All.Srgb8Alpha8;
-        public const SizedInternalFormat RGB32F = (SizedInternalFormat)All.Rgb32f;
-
-        public const GetPName MAX_TEXTURE_MAX_ANISOTROPY = (GetPName)0x84FF;
-
-        public static readonly float MaxAniso;
-
-        static Texture()
+        public Texture(string filename)
         {
-            MaxAniso = GL.GetFloat(MAX_TEXTURE_MAX_ANISOTROPY);
-        }
+            handle = GL.GenTexture();
 
-        public readonly string Name;
-        public readonly int GLTexture;
-        public readonly int Width, Height;
-        public readonly int MipmapLevels;
-        public readonly SizedInternalFormat InternalFormat;
+            //Load the image
+            Image<Rgba32> image = Image.Load<Rgba32>(filename);
 
-        public Texture(string name, Bitmap image, bool generateMipmaps, bool srgb)
-        {
-            Name = name;
-            Width = image.Width;
-            Height = image.Height;
-            InternalFormat = srgb ? Srgb8Alpha8 : SizedInternalFormat.Rgba8;
-
-            if (generateMipmaps)
-            {
-                // Calculate how many levels to generate for this texture
-                MipmapLevels = (int)Math.Floor(Math.Log(Math.Max(Width, Height), 2));
-            }
-            else
-            {
-                // There is only one level
-                MipmapLevels = 1;
-            }
-
-            Util.CheckGLError("Clear");
-
-            Util.CreateTexture(TextureTarget.Texture2D, Name, out GLTexture);
-            GL.TextureStorage2D(GLTexture, MipmapLevels, InternalFormat, Width, Height);
-            Util.CheckGLError("Storage2d");
-
-            BitmapData data = image.LockBits(new Rectangle(0, 0, Width, Height),
-                ImageLockMode.ReadOnly, global::System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            
-            GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-            Util.CheckGLError("SubImage");
-
-            image.UnlockBits(data);
-
-            if (generateMipmaps) GL.GenerateTextureMipmap(GLTexture);
-
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            Util.CheckGLError("WrapS");
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-            Util.CheckGLError("WrapT");
-
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMinFilter, (int)(generateMipmaps ? TextureMinFilter.Linear : TextureMinFilter.LinearMipmapLinear));
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            Util.CheckGLError("Filtering");
-
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMaxLevel, MipmapLevels - 1);
-
-            // This is a bit weird to do here
-            image.Dispose();
-        }
-
-        public Texture(string name, int GLTex, int width, int height, int mipmaplevels, SizedInternalFormat internalFormat)
-        {
-            Name = name;
-            GLTexture = GLTex;
-            Width = width;
-            Height = height;
-            MipmapLevels = mipmaplevels;
-            InternalFormat = internalFormat;
-        }
-
-        public Texture(string name, int width, int height, IntPtr data, bool generateMipmaps = false, bool srgb = false)
-        {
-            Name = name;
-            Width = width;
-            Height = height;
-            InternalFormat = srgb ? Srgb8Alpha8 : SizedInternalFormat.Rgba8;
-            MipmapLevels = generateMipmaps == false ? 1 : (int)Math.Floor(Math.Log(Math.Max(Width, Height), 2));
-
-            Util.CreateTexture(TextureTarget.Texture2D, Name, out GLTexture);
-            GL.TextureStorage2D(GLTexture, MipmapLevels, InternalFormat, Width, Height);
-
-            GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, data);
-
-            if (generateMipmaps) GL.GenerateTextureMipmap(GLTexture);
-
-            SetWrap(TextureCoordinate.S, TextureWrapMode.Repeat);
-            SetWrap(TextureCoordinate.T, TextureWrapMode.Repeat);
-
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMaxLevel, MipmapLevels - 1);
-        }
-
-        public Texture(string name, string filepath, bool generateMipmaps, bool SRGB)
-        {
-            Name = name;
-            GLTexture = GL.GenTexture();
-            SixLabors.ImageSharp.Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(filepath);image.Mutate(x => x.Flip(FlipMode.Vertical));
-            Width = image.Width;
-            Height = image.Height;
+            //ImageSharp loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
+            //This will correct that, making the texture display properly.
             image.Mutate(x => x.Flip(FlipMode.Vertical));
-            
+
+            //Get an array of the pixels, in ImageSharp's internal format.
             Rgba32[] tempPixels = image.GetPixelSpan().ToArray();
 
             //Convert ImageSharp's format into a byte array, so we can use it with OpenGL.
@@ -141,56 +38,15 @@ namespace RenderingEngine
                 pixels.Add(p.B);
                 pixels.Add(p.A);
             }
+
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
-            Util.CreateTexture(TextureTarget.Texture2D, Name, out GLTexture);
-            GL.TextureStorage2D(GLTexture, MipmapLevels, InternalFormat, Width, Height);
-
-           
-
-            if (generateMipmaps) GL.GenerateTextureMipmap(GLTexture);
-
-            SetWrap(TextureCoordinate.S, TextureWrapMode.Repeat);
-            SetWrap(TextureCoordinate.T, TextureWrapMode.Repeat);
-
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMaxLevel, MipmapLevels - 1);
+            UseTexture();
         }
 
-        public void SetMinFilter(TextureMinFilter filter)
+        public void UseTexture()
         {
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMinFilter, (int)filter);
-        }
-        
-        public void SetMagFilter(TextureMagFilter filter)
-        {
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMagFilter, (int)filter);
-        }
-
-        public void SetAnisotropy(float level)
-        {
-            const TextureParameterName TEXTURE_MAX_ANISOTROPY = (TextureParameterName)0x84FE;
-            GL.TextureParameter(GLTexture, TEXTURE_MAX_ANISOTROPY, Util.Clamp(level, 1, MaxAniso));
-        }
-
-        public void SetLod(int @base, int min, int max)
-        {
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureLodBias, @base);
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMinLod, min);
-            GL.TextureParameter(GLTexture, TextureParameterName.TextureMaxLod, max);
-        }
-        
-        public void SetWrap(TextureCoordinate coord, TextureWrapMode mode)
-        {
-            GL.TextureParameter(GLTexture, (TextureParameterName)coord, (int)mode);
-        }
-
-        public void Dispose()
-        {
-            GL.DeleteTexture(GLTexture);
-        }
-
-        public void Use()
-        {
-            GL.BindTexture(TextureTarget.Texture2D, GLTexture);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, handle);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace RenderingEngine
         int VertexBufferObject;
         int VertexArrayObject;
         int ElementBufferObject;
-        Shader shader;
+        public Shader shader;
 
         public Mesh()
         {

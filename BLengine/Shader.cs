@@ -169,5 +169,12 @@ namespace RenderingEngine
         {
             return GL.GetAttribLocation(Program, attribName);
         }
+
+        public void SetInt(string name, int value)
+        {
+            int location = GL.GetUniformLocation(Program, name);
+
+            GL.Uniform1(location, value);
+        }
     }
 }
