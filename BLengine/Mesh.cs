@@ -52,7 +52,6 @@ namespace RenderingEngine
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-           
         }
 
         public void Render()

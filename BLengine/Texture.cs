@@ -7,17 +7,18 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.Processing;
+using System;
 
 namespace RenderingEngine
 {
     class Texture
     {
-        int handle;
+        private int handle;
 
         public Texture(string filename)
         {
             GL.Enable(EnableCap.Texture2D);
-            GL.GenTextures(1, out handle);
+            handle = GL.GenTexture();
 
             //Load the image
             Image<Rgba32> image = Image.Load<Rgba32>(filename);
@@ -39,8 +40,16 @@ namespace RenderingEngine
                 pixels.Add(p.B);
                 pixels.Add(p.A);
             }
-            
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, pixels.ToArray());
+
+            GL.BindTexture(TextureTarget.Texture2D, handle);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear); 
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
         }
 
         public void UseTexture()
