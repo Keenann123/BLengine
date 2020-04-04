@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-
+using static RenderingEngine.ShaderManager;
 
 namespace RenderingEngine
 {
@@ -33,7 +33,11 @@ namespace RenderingEngine
 
         public MeshComponent(Entity parent) : base(parent, new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1))
         {
-            shader = new Shader("Default", "Shaders/default.vert" ,"Shaders/default.frag");
+            //shader = new Shader("Default", "Shaders/default.vert" ,"Shaders/default.frag");
+
+            shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2 | ShaderFlags.USE_TEST1);
+        
+
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();

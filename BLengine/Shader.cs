@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics;
 using System.Threading;
+using static RenderingEngine.ShaderManager;
 
 namespace RenderingEngine
 {
@@ -21,8 +22,20 @@ namespace RenderingEngine
         public ActiveUniformType Type;
     }
 
+
+
+   //class ShaderInjection
+   // {
+   //     public enum ShaderInjectionType { Vertex, Fragment }
+   //     public ShaderInjectionType type;
+   //     public ShaderFlags flags;
+   //     public ShaderInjection_definitions definition;
+   // }
+
     class Shader
     {
+        //public Dictionary<ShaderInjection, string> ShaderDefineInjections = new Dictionary<ShaderInjection, string>();
+
         public readonly string Name;
         public int Program { get; private set; }
         private readonly Dictionary<string, int> UniformToLocation = new Dictionary<string, int>();
@@ -40,19 +53,33 @@ namespace RenderingEngine
             Program = CreateProgram(name, Files);
         }*/ // old shader shit from string
 
+        public string inject(ShaderFlags flags)
+        {
+            String define = ""; //String injection
+            foreach(ShaderFlags i in Enum.GetValues(typeof(ShaderFlags)))
+            {
+                if (flags.HasFlag(i))
+                {
+                    define += "#define " + Enum.GetName(typeof(ShaderFlags), i) + "\n";
+                }
+
+            }
+            return define;
+        }
+
         public Shader(string name, string vertexPath, string fragmentPath)
         {
-            string VertexShaderSource;
-            string FragmentShaderSource;
+            string VertexShaderSource = "#version 330 core\n";
+            string FragmentShaderSource = "#version 330 core\n";
 
             using (StreamReader reader = new StreamReader(vertexPath, Encoding.UTF8))
             {
-                VertexShaderSource = reader.ReadToEnd();
+                VertexShaderSource += reader.ReadToEnd();
             }
 
             using (StreamReader reader = new StreamReader(fragmentPath, Encoding.UTF8))
             {
-                FragmentShaderSource = reader.ReadToEnd();
+                FragmentShaderSource += reader.ReadToEnd();
             }
 
             Name = name;
@@ -62,6 +89,38 @@ namespace RenderingEngine
             };
             Program = CreateProgram(name, Files);
         }
+
+
+
+        public Shader(ShaderType_BL type, ShaderFlags flags)
+        {
+            string VertexShaderSource = "#version 330 core\n";
+            string FragmentShaderSource = "#version 330 core\n";
+            string injectionCode = inject(flags);
+
+            FragmentShaderSource += injectionCode;
+            VertexShaderSource += injectionCode;
+
+            using (StreamReader reader = new StreamReader("./Shaders/" + type.ToString() + ".vert", Encoding.UTF8))
+            {
+                VertexShaderSource += reader.ReadToEnd();
+            }
+
+            using (StreamReader reader = new StreamReader("./Shaders/" + type.ToString() + ".frag", Encoding.UTF8))
+            {
+                FragmentShaderSource += reader.ReadToEnd();
+            }
+
+            Files = new[]{
+                (ShaderType.VertexShader, VertexShaderSource),
+                (ShaderType.FragmentShader, FragmentShaderSource),
+            };
+
+            Name = type.ToString();
+
+            Program = CreateProgram(Name, Files);
+        }
+
 
         public void UseShader()
         {

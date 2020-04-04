@@ -8,6 +8,7 @@ using ImGuiNET;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
+using static RenderingEngine.ShaderManager;
 
 namespace RenderingEngine
 {
@@ -65,10 +66,29 @@ namespace RenderingEngine
   
             ImGui.Begin("Renderer");
             ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
-            if(ImGui.Button("Quit", new System.Numerics.Vector2(100,100)))
+           
+            ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
+            if (ImGui.Button("Change Shader TEST2 | TEST1", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2 | ShaderFlags.USE_TEST1);
+            }
+            if (ImGui.Button("Change Shader TEST2", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2);
+            }
+            if (ImGui.Button("Change Shader TEST1", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST1);
+            }
+            if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default);
+            }
+            if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
             {
                 base.Exit();
             }
+
             ImGui.End();
 
             tex.UseTexture(TextureUnit.Texture0);
