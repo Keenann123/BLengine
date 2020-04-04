@@ -8,5 +8,5 @@ out vec4 FragColor;
 
 void main()
 {
-    FragColor = texture(texture0, texCoord);
+    FragColor = vec4(texCoord.rg, 0, 1);
 }
