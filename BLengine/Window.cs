@@ -14,8 +14,10 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
-        Mesh mesh1;
+        MeshComponent mesh1;
+        Entity ent1;
         Texture tex;
+        Texture tex2;
 
         public Window(GraphicsMode gMode) : base(1280, 720, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
@@ -29,9 +31,12 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            mesh1 = new Mesh();
+            ent1 = new Entity(new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1));
+            mesh1 = new MeshComponent(ent1);
             tex = new Texture("Textures/test.png");
-            _controller = new ImGuiController(Width, Height);            
+            tex2 = new Texture("Textures/test2.png");
+            _controller = new ImGuiController(Width, Height);
+            
         }
 
         protected override void OnResize(EventArgs e)
@@ -66,7 +71,10 @@ namespace RenderingEngine
             }
             ImGui.End();
 
-            tex.UseTexture();
+            tex.UseTexture(TextureUnit.Texture0);
+            tex2.UseTexture(TextureUnit.Texture1);
+            mesh1.shader.SetInt("diffuse", 0);
+            mesh1.shader.SetInt("normal", 1);
             mesh1.Render();
 
             _controller.Render();

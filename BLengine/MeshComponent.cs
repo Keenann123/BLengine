@@ -10,7 +10,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace RenderingEngine
 {
-    class Mesh
+    class MeshComponent : EntityComponent
     {
         float[] vertices =
                            {
@@ -31,7 +31,7 @@ namespace RenderingEngine
         int ElementBufferObject;
         public Shader shader;
 
-        public Mesh()
+        public MeshComponent(Entity parent) : base(parent, new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1))
         {
             shader = new Shader("Default", "Shaders/default.vert" ,"Shaders/default.frag");
             VertexBufferObject = GL.GenBuffer();
@@ -51,7 +51,6 @@ namespace RenderingEngine
             int texCoordLocation = shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
-
         }
 
         public void Render()
@@ -66,6 +65,11 @@ namespace RenderingEngine
             GL.DeleteBuffer(VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.DeleteBuffer(ElementBufferObject);
+        }
+
+        public override void Update()
+        {
+            //Update matrix here
         }
     }
 }

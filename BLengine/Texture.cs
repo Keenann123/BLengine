@@ -52,9 +52,9 @@ namespace RenderingEngine
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
         }
 
-        public void UseTexture()
+        public void UseTexture(TextureUnit unit = TextureUnit.Texture0)
         {
-            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, handle);
         }
     }
