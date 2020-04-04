@@ -12,18 +12,19 @@ namespace RenderingEngine
 {
     class Mesh
     {
-        float[] vertices = 
+        float[] vertices =
                            {
-                              0.5f, 0.5f, 0.0f, // top right
-                              0.5f, -0.5f, 0.0f,  // bottom right
-                              -0.5f, -0.5f, 0.0f,  // bottom left
-                              -0.5f,  0.5f, 0.0f   // top left
+                            //Position          Texture coordinates
+                            0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
+                            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+                           -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+                           -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
                            };
 
         uint[] indices =
                          {
-                           0, 1, 3,
-                           1, 2, 3
+                          0, 1, 3,
+                          1, 2, 3
                          };
         int VertexBufferObject;
         int VertexArrayObject;
@@ -32,7 +33,7 @@ namespace RenderingEngine
 
         public Mesh()
         {
-            shader = new Shader("test", "../../../Shaders/default.vert" ,"../../../Shaders/default.frag");
+            shader = new Shader("Default", "../../../Shaders/default.vert" ,"../../../Shaders/default.frag");
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
@@ -43,10 +44,13 @@ namespace RenderingEngine
             GL.BindVertexArray(VertexArrayObject);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
+            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            GL.EnableVertexAttribArray(texCoordLocation);
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
            
         }
@@ -61,6 +65,7 @@ namespace RenderingEngine
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.DeleteBuffer(VertexBufferObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.DeleteBuffer(ElementBufferObject);
         }
     }

@@ -164,5 +164,10 @@ namespace RenderingEngine
             
             return Shader;
         }
+
+        public int GetAttribLocation(string attribName)
+        {
+            return GL.GetAttribLocation(Program, attribName);
+        }
     }
 }
