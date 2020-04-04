@@ -123,6 +123,7 @@
     <Compile Include="EntityComponent.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="ShaderManager.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="MeshComponent.cs" />
