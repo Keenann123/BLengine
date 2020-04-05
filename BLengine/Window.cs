@@ -70,24 +70,24 @@ namespace RenderingEngine
             ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
            
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
-            if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
+ 
+
+           if (ImGui.Button("Change Shader TEST2 | TEST1", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL | ShaderFlags.USE_DIFFUSE);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2 | ShaderFlags.USE_TEST1);
             }
-            if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
+            if (ImGui.Button("Change Shader TEST2", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2);
             }
-            if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
+            if (ImGui.Button("Change Shader TEST1", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST1);
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
                 mesh1.shader = ShaderManager.get(ShaderType_BL.Default);
             }
-
-        
 
             ImGui.Text("Fragment:");
             ImGui.Text(mesh1.shader.SourceCode_frag);
