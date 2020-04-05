@@ -43,16 +43,6 @@ namespace RenderingEngine
         public string SourceCode_frag, SourceCode_vert;
         private (ShaderType Type, string Path)[] Files;
 
-/*        public Shader(string name, string vertexShader, string fragmentShader)
-        {
-            Name = name;
-            Files = new[]{
-                (ShaderType.VertexShader, vertexShader),
-                (ShaderType.FragmentShader, fragmentShader),
-            };
-            Program = CreateProgram(name, Files);
-        }*/ // old shader shit from string
-
         public string inject(ShaderFlags flags)
         {
             String define = ""; //String injection

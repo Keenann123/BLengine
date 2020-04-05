@@ -35,9 +35,9 @@ namespace RenderingEngine
         public MeshComponent(Entity parent) : base(parent, new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1))
         {
             shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
-            Matrix4 scale = Matrix4.CreateScale(1f);
-            Matrix4 rotation = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(45.0f));
-            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 1.0f, 1.0f));
+            Matrix4 scale = Matrix4.CreateScale(0.5f);
+            Matrix4 rotation = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(0.0f));
+            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
             ModelMatrix = scale * rotation * translation;
             Matrix4.CreateRotationY(MathHelper.DegreesToRadians(-55.0f));
 
