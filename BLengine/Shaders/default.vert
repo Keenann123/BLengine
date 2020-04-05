@@ -8,8 +8,8 @@ out vec3 worldPosition;
 void main()
 {
 	texCoord = aTexCoord;
-	worldPosition = aPosition;
+	worldPosition = (transform * vec4(aPosition, 1.0f)).rgb;
 
-    gl_Position = vec4(aPosition, 1.0);
+    gl_Position = transform * vec4(aPosition, 1.0f);
 
 }

@@ -19,8 +19,9 @@ namespace RenderingEngine
         {
             Matrix4 scale = Matrix4.CreateScale(0.5f);
             Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(45f));
-            cameraMatrix = scale * rotation;// * translation;
-            // do matrix multiplying here with rotation and scale!!!
+            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0, 0, 0));
+            cameraMatrix = scale * rotation * translation;
+            // do matrix multiplying here with scale, rotation and translation!!!!!
         }
 
         public Matrix4 GetMatrix()
