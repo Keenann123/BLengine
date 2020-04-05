@@ -57,7 +57,11 @@ namespace RenderingEngine
 
         public void Render()
         {
-            shader.UseShader();
+            shader.UseShader(); //Set shader
+
+            shader.SetInt("diffuse", 0);
+            shader.SetInt("normal", 1); //todo material system/stuffs
+
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
         }

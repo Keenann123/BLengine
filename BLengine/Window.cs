@@ -87,6 +87,8 @@ namespace RenderingEngine
                 mesh1.shader = ShaderManager.get(ShaderType_BL.Default);
             }
 
+        
+
             ImGui.Text("Fragment:");
             ImGui.Text(mesh1.shader.SourceCode_frag);
 
@@ -102,10 +104,8 @@ namespace RenderingEngine
 
             tex.UseTexture(TextureUnit.Texture0);
             tex2.UseTexture(TextureUnit.Texture1);
-            mesh1.shader.SetInt("diffuse", 0);
-            mesh1.shader.SetInt("normal", 1);
-            mesh1.shader.BindMatrix4("transform", player.GetCamera().GetMatrix());
-            mesh1.Render();
+
+            mesh1.Render(); 
 
             _controller.Render();
             
