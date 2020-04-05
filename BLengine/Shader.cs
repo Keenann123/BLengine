@@ -80,7 +80,21 @@ namespace RenderingEngine
             Program = CreateProgram(name, Files);
         }
 
+        public Shader(string frag, string vert)
+        {
+            string VertexShaderSource = vert;
+            string FragmentShaderSource = frag;
+           
+            SourceCode_frag = FragmentShaderSource;
+            SourceCode_vert = VertexShaderSource;
 
+            Files = new[]{
+                (ShaderType.VertexShader, VertexShaderSource),
+                (ShaderType.FragmentShader, FragmentShaderSource),
+            };
+
+            Program = CreateProgram(Name, Files);
+        }
 
         public Shader(ShaderType_BL type, ShaderFlags flags)
         {

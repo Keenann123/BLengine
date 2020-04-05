@@ -37,10 +37,11 @@ namespace RenderingEngine
             base.OnLoad(e);
             ent1 = new Entity(new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1));
             mesh1 = new MeshComponent(ent1);
-
+      
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
+          
             player = new Player();
             
         }
@@ -70,14 +71,13 @@ namespace RenderingEngine
             GL.ClearColor(new Color4(0.5f, 0.5f, 1f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-  
-            ImGui.Begin("Renderer");
-            ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
-           
+
+            #region Render Debug ImGUI
+            ImGui.Begin("Render Debug");
+            ImGui.SetWindowSize(new System.Numerics.Vector2(450, 275), ImGuiCond.Once);
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
 
             ImGui.Text("Camera Pos: " + player.GetCamera().Position);
-
 
 
             if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
@@ -105,18 +105,24 @@ namespace RenderingEngine
                 mesh1.shader = ShaderManager.get(ShaderType_BL.Default);
             }
 
-            ImGui.Text("Fragment:");
-            ImGui.Text(mesh1.shader.SourceCode_frag);
-
-            ImGui.Text("Vertex:");
-            ImGui.Text(mesh1.shader.SourceCode_vert);
-
             if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
             {
                 Exit();
             }
+            #endregion
 
-            ImGui.End();
+
+            #region Shader Live Coding
+            ImGui.Begin("Shader Live Coding");
+
+            ImGui.InputTextMultiline("Fragment", ref mesh1.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(500, 600));
+            ImGui.InputTextMultiline("Vertex", ref mesh1.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(500, 400));
+            if (ImGui.Button("Compile", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.shader = new Shader(mesh1.shader.SourceCode_frag, mesh1.shader.SourceCode_vert);
+            }
+            ImGui.End(); 
+            #endregion
 
             tex.UseTexture(TextureUnit.Texture0);
             tex2.UseTexture(TextureUnit.Texture1);
