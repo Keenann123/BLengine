@@ -15,8 +15,8 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
-        public static int _Width = 1280;
-        public static int _Height = 720;
+        public static int _Width = 1440;
+        public static int _Height = 900;
         MeshComponent mesh1;
         Entity ent1;
         Texture tex;
@@ -114,13 +114,20 @@ namespace RenderingEngine
 
             #region Shader Live Coding
             ImGui.Begin("Shader Live Coding");
-
-            ImGui.InputTextMultiline("Fragment", ref mesh1.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(500, 600));
-            ImGui.InputTextMultiline("Vertex", ref mesh1.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(500, 400));
+            ImGui.SetWindowSize(new System.Numerics.Vector2(530, 475), ImGuiCond.Once);
             if (ImGui.Button("Compile", new System.Numerics.Vector2(400, 32)))
             {
                 mesh1.shader = new Shader(mesh1.shader.SourceCode_frag, mesh1.shader.SourceCode_vert);
             }
+            if (ImGui.CollapsingHeader("Fragment")){
+                ImGui.InputTextMultiline("Fragment Shader", ref mesh1.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(800, 600));
+            }
+            if (ImGui.CollapsingHeader("Vertex"))
+            {
+                ImGui.InputTextMultiline("Vertex Shader", ref mesh1.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(800, 600));
+            }
+          
+           
             ImGui.End(); 
             #endregion
 

@@ -25,8 +25,9 @@ namespace RenderingEngine
 
         public Camera(Entity parent)
         {
-            Position = new Vector3(1, 1, 1);
-            LookTarget = new Vector3(45f, 0f, 0f);
+            
+            Position = new Vector3(0.1f, -0.14f, 11f);
+            LookTarget = new Vector3(5f, 0f, 90f);
 
             Direction = Vector3.Normalize(Position - LookTarget);
 
