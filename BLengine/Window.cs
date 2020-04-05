@@ -84,6 +84,13 @@ namespace RenderingEngine
             {
                 mesh1.shader = ShaderManager.get(ShaderType_BL.Default);
             }
+
+            ImGui.Text("Fragment:");
+            ImGui.Text(mesh1.shader.SourceCode_frag);
+
+            ImGui.Text("Vertex:");
+            ImGui.Text(mesh1.shader.SourceCode_vert);
+
             if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
             {
                 base.Exit();

@@ -40,7 +40,7 @@ namespace RenderingEngine
         public int Program { get; private set; }
         private readonly Dictionary<string, int> UniformToLocation = new Dictionary<string, int>();
         private bool Initialized = false;
-
+        public string SourceCode_frag, SourceCode_vert;
         private (ShaderType Type, string Path)[] Files;
 
 /*        public Shader(string name, string vertexShader, string fragmentShader)
@@ -110,6 +110,9 @@ namespace RenderingEngine
             {
                 FragmentShaderSource += reader.ReadToEnd();
             }
+
+            SourceCode_frag = FragmentShaderSource;
+            SourceCode_vert = VertexShaderSource;
 
             Files = new[]{
                 (ShaderType.VertexShader, VertexShaderSource),
