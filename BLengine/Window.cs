@@ -74,9 +74,9 @@ namespace RenderingEngine
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
  
 
-           if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
+           if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
             }
             if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
@@ -85,6 +85,10 @@ namespace RenderingEngine
             if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
             {
                 mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE);
+            }
+            if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL);
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {

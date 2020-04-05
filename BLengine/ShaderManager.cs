@@ -22,8 +22,10 @@ namespace RenderingEngine
         public enum ShaderFlags
         {
             NONE = 0,
-            USE_DIFFUSE = 1,
-            USE_NORMAL = 2
+            DEBUG_LIGHTING = 1,
+            USE_DIFFUSE = 2,
+            USE_NORMAL = 4,
+            LIT = 8
         };
 
 

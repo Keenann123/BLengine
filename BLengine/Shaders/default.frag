@@ -24,7 +24,12 @@ void main()
 		result = vec4(norm.rgb, 1.0f);
 	#endif
 	
-	#if defined USE_DIFFUSE && defined USE_NORMAL
+	#ifdef DEBUG_LIGHTING
+	float lighting = dot(norm * 2 - 1, vec3(1.0f, 0.5f, 0.5f) - worldPosition);
+	result = vec4(lighting, lighting, lighting, 1.0f);
+	#endif
+
+	#ifdef LIT
 	result = vec4((dot(norm * 2 - 1, vec3(1.0f, 0.5f, 0.5f) - worldPosition) * diff).rgb, 1.0f);
 	#endif
 

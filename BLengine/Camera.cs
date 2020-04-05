@@ -17,7 +17,7 @@ namespace RenderingEngine
 
         public Camera(Entity parent)
         {
-            Position = new Vector3(0.0f, 0.0f, 3.0f);
+            Position = new Vector3(0.0f, 0.0f, 0.0f);
             LookTarget = new Vector3(0.0f, 0.0f, -1.0f);
             Direction = Vector3.Normalize(Position - LookTarget);
             Update();
@@ -26,7 +26,12 @@ namespace RenderingEngine
         public void Update()
         {
             ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), (float)Window._Width / (float)Window._Height, 0.1f, 1000.0f);
-            ViewMatrix = Matrix4.LookAt(Position, LookTarget, new Vector3(0.0f, 1.0f, 0.0f));
+            
+
+            Vector3 Up = Vector3.UnitY;
+            Vector3 CameraRight = Vector3.Normalize(Vector3.Cross(Up, Direction));
+            Vector3 CameraUp = Vector3.Cross(Direction, CameraRight);
+            ViewMatrix = Matrix4.LookAt(Position, LookTarget, CameraUp);
         }
 
         public void SetPosition(Vector3 pos)
