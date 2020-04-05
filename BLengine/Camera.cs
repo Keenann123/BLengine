@@ -27,7 +27,7 @@ namespace RenderingEngine
         {
             
             Position = new Vector3(0.1f, -0.14f, 11f);
-            LookTarget = new Vector3(5f, 0f, 90f);
+            LookTarget = new Vector3(0f, 0f, 90f);
 
             Direction = Vector3.Normalize(Position - LookTarget);
 
@@ -83,10 +83,12 @@ namespace RenderingEngine
                     );
                 }
 
-                m_prevMouse = mouse;
+               
                 ViewMatrix = CreateLookAt();
 
             }
+
+            m_prevMouse = mouse;
         }
 
 
