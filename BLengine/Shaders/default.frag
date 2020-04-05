@@ -16,14 +16,13 @@ void main()
 	vec4 test1 = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	vec4 test2 = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	#ifdef USE_TEST1
+	#ifdef USE_DIFFUSE
 		test1 *= tex1;
 	#endif
 
-	#ifdef USE_TEST2
+	#ifdef USE_NORMAL
 		test2 *= tex2;
 	#endif
 	
 	FragColor = mix(test2, test1, 0.5);
-
 }

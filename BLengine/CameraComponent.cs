@@ -17,7 +17,9 @@ namespace RenderingEngine
 
         public override void Update()
         {
-            //cameraMatrix = scale * rotation * translation;
+            Matrix4 scale = Matrix4.CreateScale(0.5f);
+            Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(45f));
+            cameraMatrix = scale * rotation;// * translation;
             // do matrix multiplying here with rotation and scale!!!
         }
 

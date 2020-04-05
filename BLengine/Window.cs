@@ -19,6 +19,7 @@ namespace RenderingEngine
         Entity ent1;
         Texture tex;
         Texture tex2;
+        Player player;
 
         public Window(GraphicsMode gMode) : base(1280, 720, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
@@ -37,6 +38,7 @@ namespace RenderingEngine
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/test2.png");
             _controller = new ImGuiController(Width, Height);
+            player = new Player();
             
         }
 
@@ -68,17 +70,17 @@ namespace RenderingEngine
             ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
            
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
-            if (ImGui.Button("Change Shader TEST2 | TEST1", new System.Numerics.Vector2(400, 32)))
+            if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2 | ShaderFlags.USE_TEST1);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL | ShaderFlags.USE_DIFFUSE);
             }
-            if (ImGui.Button("Change Shader TEST2", new System.Numerics.Vector2(400, 32)))
+            if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST2);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL);
             }
-            if (ImGui.Button("Change Shader TEST1", new System.Numerics.Vector2(400, 32)))
+            if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_TEST1);
+                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE);
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
@@ -102,6 +104,7 @@ namespace RenderingEngine
             tex2.UseTexture(TextureUnit.Texture1);
             mesh1.shader.SetInt("diffuse", 0);
             mesh1.shader.SetInt("normal", 1);
+            mesh1.shader.BindMatrix4("transform", player.GetCamera().GetMatrix());
             mesh1.Render();
 
             _controller.Render();

@@ -238,5 +238,11 @@ namespace RenderingEngine
 
             GL.Uniform1(location, value);
         }
+
+        public void BindMatrix4(string name, Matrix4 matrix)
+        {
+            int location = GL.GetUniformLocation(Program, name);
+            GL.UniformMatrix4(location, true, ref matrix);
+        }
     }
 }

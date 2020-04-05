@@ -26,5 +26,41 @@ namespace RenderingEngine
         {
 
         }
+
+        public void SetLocalPosition(Vector3 pos)
+        {
+            localPosition = pos;
+            Update();
+        }
+
+        public Vector3 GetLocalPosition()
+        {
+            return localPosition;
+        }
+
+        public void SetLocalRotation(Vector3 rot)
+        {
+            localRotation = Quaternion.FromEulerAngles(rot);
+        }
+
+        public void SetLocalRotation(Quaternion q)
+        {
+            localRotation = q;
+        }
+
+        public Quaternion GetLocalRotation()
+        {
+            return localRotation;
+        }
+
+        public void SetLocalScale(float scl)
+        {
+            localScale = new Vector3(scl, scl, scl);
+        }
+
+        public void SetLocalScale(Vector3 scl)
+        {
+            localScale = scl;
+        }
     }
 }

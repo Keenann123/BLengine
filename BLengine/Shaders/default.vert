@@ -10,6 +10,6 @@ void main()
 	texCoord = aTexCoord;
 	worldPosition = aPosition;
 
-    gl_Position = vec4(aPosition, 1.0);
+    gl_Position = transform * vec4(aPosition, 1.0);
 
 }
