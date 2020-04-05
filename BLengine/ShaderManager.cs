@@ -40,6 +40,7 @@ namespace RenderingEngine
                 //Create shader
                 Shader shader = new Shader(type, flags);
                 Shaders.Add(flags, shader);
+                shader.UseShader();
                 return shader;
             }
         }
