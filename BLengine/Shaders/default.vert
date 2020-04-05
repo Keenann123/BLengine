@@ -14,6 +14,6 @@ void main()
 	texCoord = aTexCoord;
 	//worldPosition = (model * vec4(aPosition, 1.0f)).rgb;
 
-    gl_Position = view * model * vec4(aPosition, 1.0f);
+    gl_Position = vec4(aPosition, 1.0) * model * view * projection;
 
 }

@@ -37,6 +37,7 @@ namespace RenderingEngine
             base.OnLoad(e);
             ent1 = new Entity(new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1));
             mesh1 = new MeshComponent(ent1);
+
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
@@ -56,6 +57,8 @@ namespace RenderingEngine
         }
 
     
+
+
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
@@ -72,9 +75,12 @@ namespace RenderingEngine
             ImGui.SetWindowSize(new System.Numerics.Vector2(500, 500));
            
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
- 
 
-           if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
+            ImGui.Text("Camera Pos: " + player.GetCamera().Position);
+
+
+
+            if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
             {
                 mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
             }
@@ -110,6 +116,9 @@ namespace RenderingEngine
 
             tex.UseTexture(TextureUnit.Texture0);
             tex2.UseTexture(TextureUnit.Texture1);
+
+
+            player.GetCamera().ProcessInput();
 
             mesh1.Render();
             mesh1.shader.BindMatrix4("model", mesh1.GetModelMatrix());

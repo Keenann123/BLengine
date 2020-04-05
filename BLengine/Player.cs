@@ -13,7 +13,6 @@ namespace RenderingEngine
         public Player() : base(new Vector3(0, 0, 0), new Quaternion(new Vector3(0, 0, 0)), new Vector3(1, 1, 1))
         {
             cam = new Camera(this);
-            cam.SetPosition(new Vector3(0, 0, 0));
         }
 
         public Camera GetCamera()
