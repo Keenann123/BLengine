@@ -13,6 +13,7 @@ void main()
 	//FragColor = vec4(worldPosition.rgb, 1.0f);
 	vec4 diff = vec4(0.5f, 0.5f, 0.5f, 1.0f);
 	vec3 norm = vec3(0.5f, 0.5f, 1.0f);
+
 	vec4 result = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	#ifdef USE_DIFFUSE
 		diff = vec4(texture(diffuse, texCoord).rgb, 1.0f);
@@ -24,13 +25,18 @@ void main()
 		result = vec4(norm.rgb, 1.0f);
 	#endif
 	
+	float lighting = dot(norm * 2 - 1, normalize(vec3(0.0f, 10.0f, 10.0f) - worldPosition));
+
 	#ifdef DEBUG_LIGHTING
-	float lighting = dot(norm * 2 - 1, vec3(1.0f, 0.5f, 0.5f) - worldPosition);
 	result = vec4(lighting, lighting, lighting, 1.0f);
 	#endif
 
 	#ifdef LIT
-	result = vec4((dot(norm * 2 - 1, vec3(1.0f, 0.5f, 0.5f) - worldPosition) * diff).rgb, 1.0f);
+	result = vec4(vec3(lighting, lighting, lighting) * diff.rgb, 1.0f);
+	#endif
+
+	#ifdef DEBUG_WORLDPOSITION
+	result = vec4(worldPosition.rgb, 1.0f);
 	#endif
 
 	FragColor = result;

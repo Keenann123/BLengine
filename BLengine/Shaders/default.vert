@@ -12,7 +12,7 @@ out float depth;
 void main()
 {
 	texCoord = aTexCoord;
-	//worldPosition = (model * vec4(aPosition, 1.0f)).rgb;
+	worldPosition = (model * vec4(aPosition, 1.0f)).rgb;
 
     gl_Position = vec4(aPosition, 1.0) * model * view * projection;
 

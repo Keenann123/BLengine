@@ -25,7 +25,8 @@ namespace RenderingEngine
             DEBUG_LIGHTING = 1,
             USE_DIFFUSE = 2,
             USE_NORMAL = 4,
-            LIT = 8
+            LIT = 8,
+            DEBUG_WORLDPOSITION = 16
         };
 
 

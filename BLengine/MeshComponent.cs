@@ -16,10 +16,10 @@ namespace RenderingEngine
         float[] vertices =
                            {
                             //Position          Texture coordinates
-                            0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-                            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-                           -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-                           -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
+                            0.5f,  0.5f, 1.0f, 1.0f, 1.0f, // top right
+                            0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // bottom right
+                           -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // bottom left
+                           -0.5f,  0.5f, 1.0f, 0.0f, 1.0f  // top left
                            };
 
         uint[] indices =
@@ -37,7 +37,7 @@ namespace RenderingEngine
             shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
             Matrix4 scale = Matrix4.CreateScale(0.5f);
             Matrix4 rotation = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(0.0f));
-            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
+            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 0.0f, 10.0f));
             ModelMatrix = scale * rotation * translation;
             Matrix4.CreateRotationY(MathHelper.DegreesToRadians(-55.0f));
 

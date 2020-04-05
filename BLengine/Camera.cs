@@ -21,7 +21,7 @@ namespace RenderingEngine
         protected const float m_speed = 0.125f;
         protected const float m_mouseSpeedX = 0.0035f;
         protected const float m_mouseSpeedY = 0.0035f;
-        protected Vector3 m_up = Vector3.UnitY;
+        protected Vector3 m_up = Vector3.UnitZ;
 
         public Camera(Entity parent)
         {
