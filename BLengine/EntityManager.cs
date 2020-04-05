@@ -14,5 +14,13 @@ namespace RenderingEngine
         {
             entityList.Add(ent);
         }
+
+        public static void UpdateEntities()
+        {
+            foreach(Entity ent in entityList)
+            {
+                ent.Update();
+            }
+        }
     }
 }

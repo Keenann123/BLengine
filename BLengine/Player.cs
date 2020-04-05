@@ -9,16 +9,14 @@ namespace RenderingEngine
 {
     class Player : Entity
     {
-        CameraComponent cam;
+        Camera cam;
         public Player() : base(new Vector3(0, 0, 0), new Quaternion(new Vector3(0, 0, 0)), new Vector3(1, 1, 1))
         {
-            cam = new CameraComponent(this);
-            cam.SetLocalPosition(new Vector3(0, 0, 0));
-            cam.SetLocalRotation(new Vector3(0, 0, 0));
-            cam.SetLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
+            cam = new Camera(this);
+            cam.SetPosition(new Vector3(0, 0, 0));
         }
 
-        public CameraComponent GetCamera()
+        public Camera GetCamera()
         {
             return cam;
         }

@@ -75,5 +75,10 @@ namespace RenderingEngine
             }
         }
 
+        public void Update()
+        {
+            UpdateComponents();
+        }
+
     }
 }

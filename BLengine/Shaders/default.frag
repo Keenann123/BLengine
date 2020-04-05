@@ -1,6 +1,7 @@
 uniform vec4 colour;
 in vec2 texCoord;
 in vec3 worldPosition;
+in float depth;
 
 uniform sampler2D diffuse;
 uniform sampler2D normal;
@@ -28,5 +29,6 @@ void main()
 	#endif
 
 	FragColor = result;
+	//FragColor = vec4(depth, 0.0f, 0.0f, 1.0f);
 
 }

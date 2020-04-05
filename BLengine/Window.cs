@@ -15,13 +15,15 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
+        public static int _Width = 1280;
+        public static int _Height = 720;
         MeshComponent mesh1;
         Entity ent1;
         Texture tex;
         Texture tex2;
         Player player;
 
-        public Window(GraphicsMode gMode) : base(1280, 720, gMode,
+        public Window(GraphicsMode gMode) : base(_Width, _Height, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
                                     GameWindowFlags.Default,
                                     DisplayDevice.Default,
@@ -104,9 +106,12 @@ namespace RenderingEngine
 
             tex.UseTexture(TextureUnit.Texture0);
             tex2.UseTexture(TextureUnit.Texture1);
-           
+
             mesh1.Render();
-            mesh1.shader.BindMatrix4("transform", player.GetCamera().GetMatrix());
+            mesh1.shader.BindMatrix4("model", mesh1.GetModelMatrix());
+            mesh1.shader.BindMatrix4("view", player.GetCamera().GetViewMatrix());
+            mesh1.shader.BindMatrix4("projection", player.GetCamera().GetProjectionMatrix());
+            
             _controller.Render();
             
             Util.CheckGLError("End of frame");
