@@ -41,6 +41,7 @@ namespace RenderingEngine
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
+            _controller.CreateSkin();
           
             player = new Player();
             
@@ -68,13 +69,13 @@ namespace RenderingEngine
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4(0.5f, 0.5f, 1f, 1.0f)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.1f, 0.07f, 0.13f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
 
             #region Render Debug ImGUI
             ImGui.Begin("Render Debug");
-            ImGui.SetWindowSize(new System.Numerics.Vector2(450, 275), ImGuiCond.Once);
+            ImGui.SetWindowSize(new System.Numerics.Vector2(450, 365), ImGuiCond.Once);
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
 
             ImGui.Text("Camera Pos: " + player.GetCamera().Position);
