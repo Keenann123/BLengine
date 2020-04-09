@@ -17,5 +17,10 @@ namespace RenderingEngine
                 mesh.Render();
             }
         }
+
+        public void AddMesh(MeshComponent mesh)
+        {
+            Meshes.Add(mesh);
+        }
     }
 }

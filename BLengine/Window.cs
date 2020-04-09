@@ -18,11 +18,11 @@ namespace RenderingEngine
         public static int _Width = 1440;
         public static int _Height = 900;
         MeshComponent mesh1;
-        double t = 0;
         Entity ent1;
         Texture tex;
         Texture tex2;
         Player player;
+        float FogEndDist;
 
         public Window(GraphicsMode gMode) : base(_Width, _Height, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
@@ -65,9 +65,8 @@ namespace RenderingEngine
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
-            t += e.Time;
             base.OnRenderFrame(e);
-            mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(t), (float)Math.Cos(t), (float)Math.Sin(t));
+            mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime), 0.5f);
 
             _controller.Update(this, (float)e.Time);
 
@@ -103,10 +102,23 @@ namespace RenderingEngine
             {
                 mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_WORLDPOSITION);
             }
+            if (ImGui.Button("Change Shader DEBUG_VIEWPOS", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_VIEWPOS);
+            }
+            if (ImGui.Button("Change Shader DEBUG_VIEWDIRECTION", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_VIEWDIRECTION);
+            }
+            if (ImGui.Button("Change Shader DEBUG_FOG", new System.Numerics.Vector2(400, 32)))
+            {
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_FOG);
+            }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
                 mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default);
             }
+            ImGui.SliderFloat("Fog End Distance", ref FogEndDist, 10.0f, 10000.0f);
 
             if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
             {
@@ -144,6 +156,8 @@ namespace RenderingEngine
             mesh1.mat.shader.BindMatrix4("model", mesh1.GetModelMatrix());
             mesh1.mat.shader.BindMatrix4("view", player.GetCamera().GetViewMatrix());
             mesh1.mat.shader.BindMatrix4("projection", player.GetCamera().GetProjectionMatrix());
+            mesh1.mat.shader.BindVector3("viewPos", player.GetCamera().Position);
+            mesh1.mat.shader.BindFloat("FogEndDistance", FogEndDist);
             
             _controller.Render();
             

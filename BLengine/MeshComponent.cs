@@ -35,7 +35,6 @@ namespace RenderingEngine
 
         public MeshComponent(Entity parent) : base(parent, new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1))
         {
-            //shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
             Update();
 
             VertexBufferObject = GL.GenBuffer();
