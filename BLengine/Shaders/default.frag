@@ -2,10 +2,12 @@ uniform vec4 colour;
 uniform vec3 viewPos;
 uniform float FogEndDistance;
 in vec2 texCoord;
+in vec3 worldNormal;
 in vec3 worldPosition;
 in float depth;
-uniform sampler2D diffuse;
-uniform sampler2D normal;
+uniform vec3 DiffuseColour;
+uniform sampler2D diffuseTexture;
+uniform sampler2D normalTexture;
 
 out vec4 FragColor;
 
@@ -19,14 +21,14 @@ void main()
 	vec3 halfwayDir = normalize(lightDir + viewPos);
 	float shininess = 16;
 
-	vec4 result = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-	#ifdef USE_DIFFUSE
-		diff = vec4(texture(diffuse, texCoord).rgb, 1.0f);
+	vec4 result = vec4(DiffuseColour, 1.0f);
+	#ifdef USE_DIFFUSE_TEXTURE
+		diff = vec4(texture(diffuseTexture, texCoord).rgb, 1.0f);
 		result = vec4(diff.rgb, 1.0f);
 	#endif
 
-	#ifdef USE_NORMAL
-		norm = vec3(texture(normal, texCoord).rgb);
+	#ifdef USE_NORMAL_TEXTURE
+		norm = vec3(texture(normalTexture, texCoord).rgb);
 		result = vec4(norm.rgb * 2 - 1, 1.0f);
 	#endif
 
@@ -63,6 +65,6 @@ void main()
     #endif
 
 	FragColor = result;
-	//FragColor = vec4(depth, 0.0f, 0.0f, 1.0f);
+	//FragColor = vec4(worldNormal * 0.5 + 0.5, 1.0f);
 
 }

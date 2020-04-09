@@ -47,32 +47,37 @@ namespace RenderingEngine
 
                 // Move camera with WASD keys
                 if (keyboard.IsKeyDown(Key.W))
+                {
                     // Move forward and backwards by adding m_position and m_direction vectors
                     Position += Direction * m_speed;
+                }
 
                 if (keyboard.IsKeyDown(Key.S))
+                {
                     Position -= Direction * m_speed;
+                }
 
                 if (keyboard.IsKeyDown(Key.A))
+                {
                     // Strafe by adding a cross product of m_up and m_direction vectors
                     Position += Vector3.Cross(m_up, Direction) * m_speed;
+                }
 
                 if (keyboard.IsKeyDown(Key.D))
+                {
                     Position -= Vector3.Cross(m_up, Direction) * m_speed;
-
+                }
                 if (keyboard.IsKeyDown(Key.Space))
+                {
                     Position += m_up * m_speed;
-
+                }
                 if (keyboard.IsKeyDown(Key.ControlLeft) || keyboard.IsKeyDown(Key.X))
+                {
                     Position -= m_up * m_speed;
-
-
-
-
+                }
 
                 // Calculate yaw to look around with a mouse
-                Direction = Vector3.Transform(Direction, Matrix3.CreateFromAxisAngle(m_up, -m_mouseSpeedX * (mouse.X - m_prevMouse.X))
-                );
+                Direction = Vector3.Transform(Direction, Matrix3.CreateFromAxisAngle(m_up, -m_mouseSpeedX * (mouse.X - m_prevMouse.X)));
 
                 // Pitch is limited to m_pitchLimit
                 float angle = m_mouseSpeedY * (mouse.Y - m_prevMouse.Y);

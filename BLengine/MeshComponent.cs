@@ -15,35 +15,33 @@ namespace RenderingEngine
         Matrix4 ModelMatrix;
         float[] vertices =
                            {
-                            //Position          Texture coordinates
-                            0.5f,  0.5f, 1.0f, 1.0f, 1.0f, // top right
-                            0.5f, -0.5f, 1.0f, 1.0f, 0.0f, // bottom right
-                           -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // bottom left
-                           -0.5f,  0.5f, 1.0f, 0.0f, 1.0f  // top left
+                            //Position          Texture coordinates              Normals 
+                            0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top right
+                            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom right
+                           -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
+                           -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // top left
                            };
 
         uint[] indices =
                          {
                           0, 1, 3,
-                          1, 2, 3
+                          1, 2, 3,
                          };
+
         int VertexBufferObject;
         int VertexArrayObject;
         int ElementBufferObject;
-        public Shader shader;
+        public Material mat;
 
         public MeshComponent(Entity parent) : base(parent, new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1))
         {
-            shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
-            Matrix4 scale = Matrix4.CreateScale(0.5f);
-            Matrix4 rotation = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(0.0f));
-            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 0.0f, 10.0f));
-            ModelMatrix = scale * rotation * translation;
-            Matrix4.CreateRotationY(MathHelper.DegreesToRadians(-55.0f));
+            //shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
+            Update();
 
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
+            mat = new Material("Textures/test.png", "Textures/testnormal.png");
             Initialise();
         }
         void Initialise()
@@ -53,20 +51,22 @@ namespace RenderingEngine
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
-            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            int texCoordLocation = mat.shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+            int normalLocation = mat.shader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));
         }
 
         public void Render()
         {
-            shader.UseShader(); //Set shader
-
-            shader.SetInt("diffuse", 0);
-            shader.SetInt("normal", 1); //todo material system/stuffs
-
+            // add material stuff here
+            mat.RenderMaterial();
+          
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
         }
@@ -80,7 +80,10 @@ namespace RenderingEngine
 
         public override void Update()
         {
-            
+            Matrix4 scale = Matrix4.CreateScale(5.0f);
+            Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(0.0f));
+            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
+            ModelMatrix = scale * rotation * translation;
         }
 
         public Matrix4 GetModelMatrix()

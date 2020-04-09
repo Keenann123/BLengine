@@ -18,6 +18,7 @@ namespace RenderingEngine
         public static int _Width = 1440;
         public static int _Height = 900;
         MeshComponent mesh1;
+        double t = 0;
         Entity ent1;
         Texture tex;
         Texture tex2;
@@ -64,8 +65,9 @@ namespace RenderingEngine
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
-
+            t += e.Time;
             base.OnRenderFrame(e);
+            mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(t), (float)Math.Cos(t), (float)Math.Sin(t));
 
             _controller.Update(this, (float)e.Time);
 
@@ -83,27 +85,27 @@ namespace RenderingEngine
 
             if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE | ShaderFlags.USE_NORMAL);
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE);
             }
             if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE);
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE_TEXTURE);
             }
             if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL);
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL_TEXTURE);
             }
             if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL);
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE);
             }
             if (ImGui.Button("Change Shader DEBUG_WORLDPOSITION", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_WORLDPOSITION);
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_WORLDPOSITION);
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = ShaderManager.get(ShaderType_BL.Default);
+                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default);
             }
 
             if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
@@ -118,14 +120,14 @@ namespace RenderingEngine
             ImGui.SetWindowSize(new System.Numerics.Vector2(530, 475), ImGuiCond.Once);
             if (ImGui.Button("Compile", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.shader = new Shader(mesh1.shader.SourceCode_frag, mesh1.shader.SourceCode_vert);
+                mesh1.mat.shader = new Shader(mesh1.mat.shader.SourceCode_frag, mesh1.mat.shader.SourceCode_vert);
             }
             if (ImGui.CollapsingHeader("Fragment")){
-                ImGui.InputTextMultiline("Fragment Shader", ref mesh1.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(800, 600));
+                ImGui.InputTextMultiline("Fragment Shader", ref mesh1.mat.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(800, 600));
             }
             if (ImGui.CollapsingHeader("Vertex"))
             {
-                ImGui.InputTextMultiline("Vertex Shader", ref mesh1.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(800, 600));
+                ImGui.InputTextMultiline("Vertex Shader", ref mesh1.mat.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(800, 600));
             }
           
            
@@ -139,9 +141,9 @@ namespace RenderingEngine
             player.GetCamera().ProcessInput();
 
             mesh1.Render();
-            mesh1.shader.BindMatrix4("model", mesh1.GetModelMatrix());
-            mesh1.shader.BindMatrix4("view", player.GetCamera().GetViewMatrix());
-            mesh1.shader.BindMatrix4("projection", player.GetCamera().GetProjectionMatrix());
+            mesh1.mat.shader.BindMatrix4("model", mesh1.GetModelMatrix());
+            mesh1.mat.shader.BindMatrix4("view", player.GetCamera().GetViewMatrix());
+            mesh1.mat.shader.BindMatrix4("projection", player.GetCamera().GetProjectionMatrix());
             
             _controller.Render();
             

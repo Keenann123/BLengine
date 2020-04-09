@@ -236,7 +236,7 @@ namespace RenderingEngine
             return GL.GetAttribLocation(Program, attribName);
         }
 
-        public void SetInt(string name, int value)
+        public void BindInt(string name, int value)
         {
             int location = GL.GetUniformLocation(Program, name);
 
@@ -247,6 +247,30 @@ namespace RenderingEngine
         {
             int location = GL.GetUniformLocation(Program, name);
             GL.UniformMatrix4(location, true, ref matrix);
+        }
+
+        public void BindFloat(string name, float value)
+        {
+            int location = GL.GetUniformLocation(Program, name);
+            GL.Uniform1(location, value);
+        }
+
+        public void BindVector2(string name, Vector2 value)
+        {
+            int location = GL.GetUniformLocation(Program, name);
+            GL.Uniform2(location, value);
+        }
+
+        public void BindVector3(string name, Vector3 value)
+        {
+            int location = GL.GetUniformLocation(Program, name);
+            GL.Uniform3(location, value);
+        }
+
+        public void BindVector4(string name, Vector4 value)
+        {
+            int location = GL.GetUniformLocation(Program, name);
+            GL.Uniform4(location, value);
         }
     }
 }

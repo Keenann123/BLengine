@@ -15,6 +15,7 @@ namespace RenderingEngine
         public enum ShaderType_BL
         {
             Default,
+            Deferred_Directional,
             ImGui
         };
 
@@ -23,12 +24,15 @@ namespace RenderingEngine
         {
             NONE = 0,
             DEBUG_LIGHTING = 1,
-            USE_DIFFUSE = 2,
-            USE_NORMAL = 4,
-            LIT = 8,
-            DEBUG_WORLDPOSITION = 16
+            USE_DIFFUSE_TEXTURE = 2,
+            USE_NORMAL_TEXTURE = 4,
+            USE_SPECULAR_TEXTURE = 8,
+            DEBUG_FOG = 16,
+            DEBUG_VIEWPOS = 32,
+            DEBUG_VIEWDIRECTION = 64,
+            DEBUG_WORLDPOSITION = 128,
+            LIT = 256
         };
-
 
         public static Shader get(ShaderType_BL type, ShaderFlags flags = 0)
         {
