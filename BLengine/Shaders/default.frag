@@ -19,7 +19,7 @@ void main()
     vec3 lightDir = normalize(vec3(0.0f, 10.0f, 10.0f));
     vec3 viewDir = normalize(worldPosition - viewPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    float kShininess = 2;
+    float kShininess = 32;
 
     vec4 result = vec4(DiffuseColour, 1.0f);
     #ifdef USE_DIFFUSE_TEXTURE
@@ -38,8 +38,8 @@ void main()
     float kPi = 3.14159265;
     float kEnergyConservation = ( 8.0 + kShininess ) / ( 8.0 * kPi ); 
     //vec3 halfwayDir = normalize(lightDir + viewDir); 
-    float spec = kEnergyConservation * pow(max(dot(norm, halfwayDir), 0.0), kShininess);
-
+    float spec = kEnergyConservation * pow(max(0.0, dot(reflect(lightDir, norm), viewDir)), kShininess);// pow(max(dot(norm, halfwayDir), 0.0), kShininess);
+    spec *= lighting;
     vec3 specular = spec * lightcolour;
 
     #ifdef LIT
