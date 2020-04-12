@@ -18,11 +18,10 @@ namespace RenderingEngine
         public static int _Width = 1440;
         public static int _Height = 900;
         MeshComponent mesh1;
-        Entity ent1;
+        MeshComponent mesh2;
         Texture tex;
         Texture tex2;
         Player player;
-        float FogEndDist;
 
         public Window(GraphicsMode gMode) : base(_Width, _Height, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
@@ -36,16 +35,14 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            ent1 = new Entity(new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1));
-            mesh1 = new MeshComponent(ent1);
-      
+            mesh1 = new MeshComponent();
+            mesh2 = new MeshComponent();
+            mesh2.SetTranslation(0.0f, 0.0f, 10.0f);
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
             _controller.CreateSkin();
-          
             player = new Player();
-            
         }
 
         protected override void OnResize(EventArgs e)
@@ -67,6 +64,9 @@ namespace RenderingEngine
             Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
             base.OnRenderFrame(e);
             mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime), 0.5f);
+            mesh1.SetTranslation((float)Math.Sin(Util.TotalTime) * 3, (float)Math.Cos(Util.TotalTime) * 3, (float)Math.Sin(Util.TotalTime) * 2);
+            mesh1.SetScale(100.0f);
+            mesh1.SetRotation(0, 0, Util.TotalTime * 10);
 
             _controller.Update(this, (float)e.Time);
 
@@ -80,45 +80,47 @@ namespace RenderingEngine
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
 
             ImGui.Text("Camera Pos: " + player.GetCamera().Position);
+            ImGui.Text("Shader Flags: " + mesh1.mat.flags.ToString());
 
 
-            if (ImGui.Button("Change Shader DIFFUSE | NORMAL", new System.Numerics.Vector2(400, 32)))
+            if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE);
+                mesh1.mat.flags = ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_DIFFUSE_TEXTURE);
+                mesh1.mat.flags = ShaderFlags.USE_DIFFUSE_TEXTURE;
             }
             if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.USE_NORMAL_TEXTURE);
+                mesh1.mat.flags = 0;
+                mesh1.mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE);
+                mesh1.mat.flags = ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change Shader DEBUG_WORLDPOSITION", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_WORLDPOSITION);
+                mesh1.mat.flags = ShaderFlags.DEBUG_WORLDPOSITION;
             }
             if (ImGui.Button("Change Shader DEBUG_VIEWPOS", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_VIEWPOS);
+                mesh1.mat.flags = ShaderFlags.DEBUG_VIEWPOS;
             }
             if (ImGui.Button("Change Shader DEBUG_VIEWDIRECTION", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_VIEWDIRECTION);
+                mesh1.mat.flags = ShaderFlags.DEBUG_VIEWDIRECTION;
             }
             if (ImGui.Button("Change Shader DEBUG_FOG", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.DEBUG_FOG);
+                mesh1.mat.flags = ShaderFlags.DEBUG_FOG;
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = ShaderManager.get(ShaderType_BL.Default);
+                mesh1.mat.flags = 0;
             }
-            ImGui.SliderFloat("Fog End Distance", ref FogEndDist, 10.0f, 10000.0f);
+            ImGui.SliderFloat("Fog End Distance", ref RenderingParameters.FogEndDistance, 10.0f, 10000.0f);
 
             if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
             {
@@ -151,14 +153,10 @@ namespace RenderingEngine
 
 
             player.GetCamera().ProcessInput();
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
+            MeshManager.Render(ShaderManager.ShaderType_BL.Default);
 
-            mesh1.Render();
-            mesh1.mat.shader.BindMatrix4("model", mesh1.GetModelMatrix());
-            mesh1.mat.shader.BindMatrix4("view", player.GetCamera().GetViewMatrix());
-            mesh1.mat.shader.BindMatrix4("projection", player.GetCamera().GetProjectionMatrix());
-            mesh1.mat.shader.BindVector3("viewPos", player.GetCamera().Position);
-            mesh1.mat.shader.BindFloat("FogEndDistance", FogEndDist);
-            
             _controller.Render();
             
             Util.CheckGLError("End of frame");

@@ -17,7 +17,7 @@ namespace RenderingEngine
         Vector3 Direction;
 
 
-        protected const float m_pitchLimit = 1.4f;
+        protected const float m_pitchLimit = 1.8f;
         protected const float m_speed = 0.125f;
         protected const float m_mouseSpeedX = 0.0035f;
         protected const float m_mouseSpeedY = 0.0035f;
@@ -33,6 +33,8 @@ namespace RenderingEngine
 
             ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1280f / 720f, 0.01f, 1000); //fix aspect for resize
             ViewMatrix = CreateLookAt();
+            CameraManager.AddCamera(this);
+            CameraManager.SetActiveCamera(this);
         }
 
         protected MouseState m_prevMouse;

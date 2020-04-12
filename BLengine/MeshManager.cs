@@ -8,17 +8,17 @@ namespace RenderingEngine
 {
     class MeshManager
     {
-        List<MeshComponent> Meshes = new List<MeshComponent>();
-        public void Render(ShaderManager.ShaderType_BL type)
+        public static List<MeshComponent> Meshes = new List<MeshComponent>();
+        public static void Render(ShaderManager.ShaderType_BL type)
         {
             // render all meshes here!
             foreach(MeshComponent mesh in Meshes)
             {
-                mesh.Render();
+                mesh.Render(type);
             }
         }
 
-        public void AddMesh(MeshComponent mesh)
+        public static void AddMesh(MeshComponent mesh)
         {
             Meshes.Add(mesh);
         }

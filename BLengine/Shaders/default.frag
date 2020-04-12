@@ -1,4 +1,3 @@
-uniform vec4 colour;
 uniform vec3 viewPos;
 uniform float FogEndDistance;
 in vec2 texCoord;
@@ -29,7 +28,7 @@ void main()
 
     #ifdef USE_NORMAL_TEXTURE
         norm = vec3(texture(normalTexture, texCoord).rgb) * 2 - 1;
-        result = vec4(norm.rgb * 2 - 1, 1.0f);
+        result = vec4(norm.rgb, 1.0f);
     #endif
 
     float lighting = max(dot(norm, lightDir), 0.0f);
@@ -65,8 +64,8 @@ void main()
 
     #ifdef DEBUG_LIGHTING
         result = vec4(colouredlight.rgb + specular, 1.0f);
-        result = vec4(viewDir.rgb, 1.0f);
-        result = vec4(specular.rgb, 1.0f);
+      //  result = vec4(viewDir.rgb, 1.0f);
+      //  result = vec4(specular.rgb, 1.0f);
     #endif
 
     FragColor = result;

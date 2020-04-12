@@ -41,11 +41,13 @@ namespace RenderingEngine
         public void SetLocalRotation(Vector3 rot)
         {
             localRotation = Quaternion.FromEulerAngles(rot);
+            Update();
         }
 
         public void SetLocalRotation(Quaternion q)
         {
             localRotation = q;
+            Update();
         }
 
         public Quaternion GetLocalRotation()
@@ -56,11 +58,13 @@ namespace RenderingEngine
         public void SetLocalScale(float scl)
         {
             localScale = new Vector3(scl, scl, scl);
+            Update();
         }
 
         public void SetLocalScale(Vector3 scl)
         {
             localScale = scl;
+            Update();
         }
     }
 }

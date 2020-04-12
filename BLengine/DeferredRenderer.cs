@@ -13,16 +13,16 @@ namespace RenderingEngine
         int TextureSize = 2048;
         uint AlbedoRT;
         uint NormalRT;
+        uint SpecularRT;
         uint DepthRT;
         uint DeferredFBOHandle;
 
         uint LightingRT;
         uint LightingFBOHandle;
 
-        void RenderToGBuffer()
+        public void RenderToGBuffer()
         {
-            // here we should render all objects
-            //MeshManager.Render(ShaderManager.ShaderType_BL.Default);
+            MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
         }
 
         void SetupGBuffer()
@@ -37,6 +37,14 @@ namespace RenderingEngine
 
             GL.GenTextures(1, out NormalRT);
             GL.BindTexture(TextureTarget.Texture2D, NormalRT);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, TextureSize, TextureSize, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
+           
+            GL.GenTextures(1, out SpecularRT);
+            GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, TextureSize, TextureSize, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
@@ -67,9 +75,9 @@ namespace RenderingEngine
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, DeferredFBOHandle);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, AlbedoRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment1Ext, TextureTarget.Texture2D, NormalRT, 0);
-            GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment2Ext, TextureTarget.Texture2D, DepthRT, 0);
+            GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment2Ext, TextureTarget.Texture2D, SpecularRT, 0);
+            GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment3Ext, TextureTarget.Texture2D, DepthRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, internalDepthBuffer, 0);
-
         }
     }
 }

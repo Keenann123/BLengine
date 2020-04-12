@@ -15,8 +15,12 @@ namespace RenderingEngine
         bool UseDiffuse = false;
         Texture NormalMap;
         bool UseNormal = false;
-        public Material(string diffuseTexture, string normalTexture)
+        public ShaderManager.ShaderFlags flags = 0;
+        public MeshComponent owner;
+        public Material(string diffuseTexture, string normalTexture, MeshComponent m)
         {
+            owner = m;
+
             if(diffuseTexture != "")
             {
                 UseDiffuse = true;
@@ -30,21 +34,23 @@ namespace RenderingEngine
             if(UseDiffuse)
             {
                 DiffuseMap = new Texture(diffuseTexture);
-                shader = ShaderManager.get(ShaderManager.ShaderType_BL.Default, ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE);
+                flags = ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE;
             }
 
             if(UseNormal)
             {
                 NormalMap = new Texture(normalTexture);
-                shader = ShaderManager.get(ShaderManager.ShaderType_BL.Default, ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE);
+                flags = ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
             }
 
             if(UseDiffuse && UseNormal)
             {
-                shader = ShaderManager.get(ShaderManager.ShaderType_BL.Default, ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE);
+                flags = ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
             }
 
+            shader = ShaderManager.get(ShaderManager.ShaderType_BL.Default, flags);
         }
+
         public void RenderMaterial()
         {
             shader.UseShader(); //Set shader
@@ -52,12 +58,14 @@ namespace RenderingEngine
             if (UseDiffuse)
             {
                 DiffuseMap.UseTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
+                //flags = ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE;
                 shader.BindInt("diffuseTexture", 0);
             }
 
             if (UseNormal)
             {
                 NormalMap.UseTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
+                //flags = ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
                 shader.BindInt("normalTexture", 1);
             }
         }

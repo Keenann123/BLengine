@@ -15,6 +15,7 @@ namespace RenderingEngine
         public enum ShaderType_BL
         {
             Default,
+            GBuffer,
             Deferred_Directional,
             ImGui
         };

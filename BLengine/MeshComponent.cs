@@ -10,9 +10,12 @@ using static RenderingEngine.ShaderManager;
 
 namespace RenderingEngine
 {
-    class MeshComponent : EntityComponent
+    class MeshComponent
     {
         Matrix4 ModelMatrix;
+        Vector3 Translation = new Vector3(0.0f, 0.0f, 0.0f);
+        Vector3 Rotation = new Vector3(0.0f, 0.0f, 0.0f);
+        Vector3 Scale = new Vector3(1.0f, 1.0f, 1.0f);
         float[] vertices =
                            {
                             //Position          Texture coordinates              Normals 
@@ -33,14 +36,15 @@ namespace RenderingEngine
         int ElementBufferObject;
         public Material mat;
 
-        public MeshComponent(Entity parent) : base(parent, new Vector3(0,0,0), new Quaternion(new Vector3(0,0,0)), new Vector3(1,1,1))
+        public MeshComponent()
         {
             Update();
 
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
-            mat = new Material("Textures/test.png", "Textures/testnormal.png");
+            mat = new Material("Textures/test.png", "Textures/testnormal.png", this);
+            MeshManager.AddMesh(this);
             Initialise();
         }
         void Initialise()
@@ -61,11 +65,18 @@ namespace RenderingEngine
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));
         }
 
-        public void Render()
+        public void Render(ShaderType_BL type)
         {
             // add material stuff here
             mat.RenderMaterial();
-          
+            mat.shader = ShaderManager.get(type, mat.flags);
+            mat.shader.BindMatrix4("model", GetModelMatrix());
+            mat.shader.BindMatrix4("view", CameraManager.GetActiveCamera().GetViewMatrix());
+            mat.shader.BindMatrix4("projection", CameraManager.GetActiveCamera().GetProjectionMatrix());
+            mat.shader.BindVector3("viewPos", CameraManager.GetActiveCamera().Position);
+            mat.shader.BindFloat("FogEndDistance", RenderingParameters.FogEndDistance);
+
+
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
         }
@@ -75,19 +86,56 @@ namespace RenderingEngine
             GL.DeleteBuffer(VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.DeleteBuffer(ElementBufferObject);
+            MeshManager.Meshes.Remove(this);
         }
 
-        public override void Update()
+        public void Update()
         {
-            Matrix4 scale = Matrix4.CreateScale(5.0f);
-            Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(0.0f));
-            Matrix4 translation = Matrix4.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
+            Matrix4 scale = Matrix4.CreateScale(Scale.X, Scale.Y, Scale.Z);
+            Matrix4 rotation =  Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Rotation.X)) * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Rotation.Y)) * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation.Z));
+            Matrix4 translation = Matrix4.CreateTranslation(Translation);
             ModelMatrix = scale * rotation * translation;
         }
 
         public Matrix4 GetModelMatrix()
         {
             return ModelMatrix;
+        }
+
+        public void SetScale(float scale)
+        {
+            Scale = new Vector3(scale, scale, scale);
+            Update();
+        }
+
+        public void SetScale(Vector3 scale)
+        {
+            Scale = scale;
+            Update();
+        }
+
+        public void SetRotation(float x, float y, float z)
+        {
+            Rotation = new Vector3(x, y, z);
+            Update();
+        }
+
+        public void SetRotation(Vector3 rotation)
+        {
+            Rotation = rotation;
+            Update();
+        }
+
+        public void SetTranslation(float x, float y, float z)
+        {
+            Translation = new Vector3(x, y, z);
+            Update();
+        }
+
+        public void SetTranslation(Vector3 translation)
+        {
+            Translation = translation;
+            Update();
         }
     }
 }
