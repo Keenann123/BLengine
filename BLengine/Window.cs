@@ -23,6 +23,8 @@ namespace RenderingEngine
         Texture tex2;
         Player player;
 
+        List<MeshComponent> meshEntries = new List<MeshComponent>();
+
         public Window(GraphicsMode gMode) : base(_Width, _Height, gMode,
                                     "Legend286 and Boomer678's Rendering Engine",
                                     GameWindowFlags.Default,
@@ -83,40 +85,51 @@ namespace RenderingEngine
 
             if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.USE_DIFFUSE_TEXTURE;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.USE_DIFFUSE_TEXTURE;
             }
             if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = 0;
-                mesh1.mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
+                foreach (var mesh in MeshManager.Meshes)
+                {
+                    mesh.mat.flags = 0;
+                    mesh.mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
+                }
             }
             if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change Shader DEBUG_WORLDPOSITION", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.DEBUG_WORLDPOSITION;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.DEBUG_WORLDPOSITION;
             }
             if (ImGui.Button("Change Shader DEBUG_VIEWPOS", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.DEBUG_VIEWPOS;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.DEBUG_VIEWPOS;
             }
             if (ImGui.Button("Change Shader DEBUG_VIEWDIRECTION", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.DEBUG_VIEWDIRECTION;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.DEBUG_VIEWDIRECTION;
             }
             if (ImGui.Button("Change Shader DEBUG_FOG", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = ShaderFlags.DEBUG_FOG;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = ShaderFlags.DEBUG_FOG;
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.flags = 0;
+                foreach (var mesh in MeshManager.Meshes)
+                    mesh.mat.flags = 0;
             }
             ImGui.SliderFloat("Fog End Distance", ref RenderingParameters.FogEndDistance, 10.0f, 10000.0f);
 
@@ -132,7 +145,12 @@ namespace RenderingEngine
             ImGui.SetWindowSize(new System.Numerics.Vector2(530, 475), ImGuiCond.Once);
             if (ImGui.Button("Compile", new System.Numerics.Vector2(400, 32)))
             {
-                mesh1.mat.shader = new Shader(mesh1.mat.shader.SourceCode_frag, mesh1.mat.shader.SourceCode_vert);
+                foreach(var mesh in MeshManager.Meshes)
+                {
+                    Shader shader = new Shader(mesh1.mat.shader.SourceCode_frag, mesh1.mat.shader.SourceCode_vert);
+                    ShaderManager.put(ShaderType_BL.Default, mesh.mat.flags, shader);
+                }
+            
             }
             if (ImGui.CollapsingHeader("Fragment")){
                 ImGui.InputTextMultiline("Fragment Shader", ref mesh1.mat.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(800, 600));
@@ -153,6 +171,7 @@ namespace RenderingEngine
             player.GetCamera().ProcessInput();
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
+
             MeshManager.Render(ShaderManager.ShaderType_BL.Default);
 
             _controller.Render();

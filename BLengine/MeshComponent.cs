@@ -34,7 +34,10 @@ namespace RenderingEngine
         int VertexBufferObject;
         int VertexArrayObject;
         int ElementBufferObject;
+
         public Material mat;
+
+        public bool shaderChanged = false; 
 
         public MeshComponent()
         {
@@ -45,6 +48,7 @@ namespace RenderingEngine
             ElementBufferObject = GL.GenBuffer();
             mat = new Material("Textures/test.png", "Textures/testnormal.png", "", this);
             MeshManager.AddMesh(this);
+
             Initialise();
         }
         void Initialise()
@@ -60,22 +64,23 @@ namespace RenderingEngine
             GL.EnableVertexAttribArray(texCoordLocation);
             int normalLocation = mat.shader.GetAttribLocation("aNormal");
             GL.EnableVertexAttribArray(normalLocation);
-
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));
+
         }
 
         public void Render(ShaderType_BL type)
         {
             // add material stuff here
             mat.RenderMaterial();
+
             mat.shader = ShaderManager.get(type, mat.flags);
+
             mat.shader.BindMatrix4("model", GetModelMatrix());
             mat.shader.BindMatrix4("view", CameraManager.GetActiveCamera().GetViewMatrix());
             mat.shader.BindMatrix4("projection", CameraManager.GetActiveCamera().GetProjectionMatrix());
             mat.shader.BindVector3("viewPos", CameraManager.GetActiveCamera().Position);
             mat.shader.BindFloat("FogEndDistance", RenderingParameters.FogEndDistance);
-
 
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);

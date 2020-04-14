@@ -35,6 +35,12 @@ namespace RenderingEngine
             LIT = 256
         };
 
+
+        public static void put(ShaderType_BL type, ShaderFlags flags, Shader shader)
+        {
+            Shaders[flags] = shader;
+        }
+
         public static Shader get(ShaderType_BL type, ShaderFlags flags = 0)
         {
             if (Shaders.ContainsKey(flags))
