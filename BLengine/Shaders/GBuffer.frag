@@ -37,5 +37,6 @@ void main()
     gl_FragData[0] = resultDiffuse;
     gl_FragData[1] = resultNormal;
     gl_FragData[2] = resultSpecular;
+    gl_FragData[3] = resultDepth;
 
 }
