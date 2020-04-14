@@ -34,6 +34,11 @@ namespace RenderingEngine
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
         }
 
+        public static void BeginRenderToLightingBuffer()
+        {
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, LightingFBOHandle);
+        }
+
         public static void BindGBufferTextures()
         {
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -99,6 +104,19 @@ namespace RenderingEngine
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment2Ext, TextureTarget.Texture2D, SpecularRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment3Ext, TextureTarget.Texture2D, DepthRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, internalDepthBuffer, 0);
+
+            // Create the lighting buffer
+            GL.GenTextures(1, out LightingRT);
+            GL.BindTexture(TextureTarget.Texture2D, LightingRT);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, TextureSize, TextureSize, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
+          
+            GL.GenFramebuffers(1, out LightingFBOHandle);
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, LightingFBOHandle);
+            GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, LightingRT, 0);
 
             EndRenderToGBuffer();
         }
