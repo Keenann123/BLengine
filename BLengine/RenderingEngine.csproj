@@ -123,12 +123,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="CameraManager.cs" />
     <Compile Include="DeferredRenderer.cs" />
     <Compile Include="EntityComponent.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MeshManager.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="RenderingParameters.cs" />
     <Compile Include="ShaderManager.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="Entity.cs" />
@@ -157,6 +159,8 @@
     <None Include="Shaders\default_imgui.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Shaders\GBuffer.frag" />
+    <None Include="Shaders\GBuffer.vert" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

@@ -10,22 +10,31 @@ namespace RenderingEngine
 {
     class DeferredRenderer
     {
-        int TextureSize = 2048;
-        uint AlbedoRT;
-        uint NormalRT;
-        uint SpecularRT;
-        uint DepthRT;
-        uint DeferredFBOHandle;
+        static int TextureSize = 2048;
+        static uint AlbedoRT;
+        static uint NormalRT;
+        static uint SpecularRT;
+        static uint DepthRT;
+        static uint DeferredFBOHandle;
 
-        uint LightingRT;
-        uint LightingFBOHandle;
+        static uint LightingRT;
+        static uint LightingFBOHandle;
 
-        public void RenderToGBuffer()
+        public static void RenderToGBuffer()
         {
             MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
         }
 
-        void SetupGBuffer()
+        public static void BeginRenderToGBuffer()
+        {
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, DeferredFBOHandle);
+        }
+        public static void EndRenderToGBuffer()
+        {
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
+        }
+
+        public static void SetupGBuffer()
         {
             GL.GenTextures(1, out AlbedoRT);
             GL.BindTexture(TextureTarget.Texture2D, AlbedoRT);
@@ -78,6 +87,8 @@ namespace RenderingEngine
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment2Ext, TextureTarget.Texture2D, SpecularRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment3Ext, TextureTarget.Texture2D, DepthRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, internalDepthBuffer, 0);
+
+            EndRenderToGBuffer();
         }
     }
 }

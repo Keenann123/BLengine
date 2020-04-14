@@ -43,6 +43,7 @@ namespace RenderingEngine
             _controller = new ImGuiController(Width, Height);
             _controller.CreateSkin();
             player = new Player();
+            DeferredRenderer.SetupGBuffer();
         }
 
         protected override void OnResize(EventArgs e)
@@ -55,9 +56,6 @@ namespace RenderingEngine
             // Tell ImGui of the new size
             _controller.WindowResized(Width, Height);
         }
-
-    
-
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {

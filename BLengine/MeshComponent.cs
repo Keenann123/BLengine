@@ -67,7 +67,7 @@ namespace RenderingEngine
 
         public void Render(ShaderType_BL type)
         {
-            // add material stuff here
+            // materials work, but we need to add dynamic binding of params based on the flags :)
             mat.RenderMaterial();
             mat.shader = ShaderManager.get(type, mat.flags);
             mat.shader.BindMatrix4("model", GetModelMatrix());
