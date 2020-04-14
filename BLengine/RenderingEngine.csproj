@@ -127,6 +127,7 @@
     <Compile Include="DeferredRenderer.cs" />
     <Compile Include="EntityComponent.cs" />
     <Compile Include="EntityManager.cs" />
+    <Compile Include="ImGuiConsole.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="FullscreenQuad.cs" />
     <Compile Include="MeshManager.cs" />
