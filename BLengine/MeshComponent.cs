@@ -19,10 +19,10 @@ namespace RenderingEngine
         float[] vertices =
                            {
                             //Position          Texture coordinates              Normals 
-                            1.0f,  1.0f, 0.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top right
-                            1.0f, -1.0f, 0.0f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom right
-                           -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
-                           -1.0f,  1.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // top left
+                            0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top right
+                            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom right
+                           -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
+                           -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // top left
                            };
 
         uint[] indices =
@@ -43,7 +43,7 @@ namespace RenderingEngine
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
-            mat = new Material("Textures/test.png", "Textures/testnormal.png", this);
+            mat = new Material("Textures/test.png", "Textures/testnormal.png", "", this);
             MeshManager.AddMesh(this);
             Initialise();
         }
@@ -67,7 +67,7 @@ namespace RenderingEngine
 
         public void Render(ShaderType_BL type)
         {
-            // materials work, but we need to add dynamic binding of params based on the flags :)
+            // add material stuff here
             mat.RenderMaterial();
             mat.shader = ShaderManager.get(type, mat.flags);
             mat.shader.BindMatrix4("model", GetModelMatrix());

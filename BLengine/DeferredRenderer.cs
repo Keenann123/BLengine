@@ -34,6 +34,18 @@ namespace RenderingEngine
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
         }
 
+        public static void BindGBufferTextures()
+        {
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, AlbedoRT);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, NormalRT);
+            GL.ActiveTexture(TextureUnit.Texture2);
+            GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
+            GL.ActiveTexture(TextureUnit.Texture3);
+            GL.BindTexture(TextureTarget.Texture2D, DepthRT);
+        }
+
         public static void SetupGBuffer()
         {
             GL.GenTextures(1, out AlbedoRT);

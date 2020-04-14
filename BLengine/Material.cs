@@ -15,9 +15,11 @@ namespace RenderingEngine
         bool UseDiffuse = false;
         Texture NormalMap;
         bool UseNormal = false;
+        Texture SpecularMap;
+        bool UseSpecular = false;
         public ShaderManager.ShaderFlags flags = 0;
         public MeshComponent owner;
-        public Material(string diffuseTexture, string normalTexture, MeshComponent m)
+        public Material(string diffuseTexture, string normalTexture, string specularTexture, MeshComponent m)
         {
             owner = m;
 
@@ -30,22 +32,28 @@ namespace RenderingEngine
             {
                 UseNormal = true;
             }
+            
+            if(specularTexture != "")
+            {
+                UseSpecular = true;
+            }
 
             if(UseDiffuse)
             {
                 DiffuseMap = new Texture(diffuseTexture);
-                flags = ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE;
+                flags |= ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE;
             }
 
             if(UseNormal)
             {
                 NormalMap = new Texture(normalTexture);
-                flags = ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
+                flags |= ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
             }
 
-            if(UseDiffuse && UseNormal)
+            if(UseSpecular)
             {
-                flags = ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
+                SpecularMap = new Texture(specularTexture);
+                flags |= ShaderManager.ShaderFlags.USE_SPECULAR_TEXTURE;
             }
 
             shader = ShaderManager.get(ShaderManager.ShaderType_BL.Default, flags);
@@ -67,6 +75,12 @@ namespace RenderingEngine
                 NormalMap.UseTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
                 //flags = ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
                 shader.BindInt("normalTexture", 1);
+            }
+
+            if (UseSpecular)
+            {
+                SpecularMap.UseTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture2);
+                shader.BindInt("specularTexture", 2);
             }
         }
     }
