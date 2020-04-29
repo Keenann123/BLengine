@@ -10,13 +10,27 @@ using static RenderingEngine.ShaderManager;
 
 namespace RenderingEngine
 {
-    class MeshComponent
+    class MeshComponent_
     {
         Matrix4 ModelMatrix;
         Vector3 Translation = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 Rotation = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 Scale = new Vector3(1.0f, 1.0f, 1.0f);
-        ObjVolume vol;
+        float[] vertices =
+                           {
+                            //Position          Texture coordinates              Normals 
+                            0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // top right
+                            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom right
+                           -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
+                           -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  // top left
+                           };
+
+        uint[] indices =
+                         {
+                          0, 1, 3,
+                          1, 2, 3,
+                         };
+
         int VertexBufferObject;
         int VertexArrayObject;
         int ElementBufferObject;
@@ -25,34 +39,33 @@ namespace RenderingEngine
 
         public bool shaderChanged = false; 
 
-        public MeshComponent()
+        public MeshComponent_()
         {
             Update();
-            vol = ObjVolume.LoadFromFile("Meshes/teapot.obj");
+
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
             mat = new Material("Textures/test.png", "Textures/testnormal.png", "");
-            MeshManager.AddMesh(this);
+           //MeshManager.AddMesh(this);
 
             Initialise();
         }
         void Initialise()
         {
-           
             GL.BindVertexArray(VertexArrayObject);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetVerts().Length * sizeof(float), vol.GetVerts().ToArray(), BufferUsageHint.StaticDraw);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, vol.GetIndices().Length * sizeof(uint), vol.GetIndices().ToArray(), BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.EnableVertexAttribArray(0);/*
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(0);
             int texCoordLocation = mat.shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             int normalLocation = mat.shader.GetAttribLocation("aNormal");
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));*/
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));
 
         }
 
@@ -70,7 +83,7 @@ namespace RenderingEngine
             mat.shader.BindFloat("FogEndDistance", RenderingParameters.FogEndDistance);
 
             GL.BindVertexArray(VertexArrayObject);
-            GL.DrawElements(PrimitiveType.Triangles, vol.GetIndices().ToArray().Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
         }
         public void OnUnload()
         {
@@ -78,7 +91,7 @@ namespace RenderingEngine
             GL.DeleteBuffer(VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.DeleteBuffer(ElementBufferObject);
-            MeshManager.Meshes.Remove(this);
+           // MeshManager.Meshes.Remove(this);
         }
 
         public void Update()

@@ -67,8 +67,8 @@ void main()
       //  result = vec4(viewDir.rgb, 1.0f);
       //  result = vec4(specular.rgb, 1.0f);
     #endif
-
-    FragColor = result;
+    float gamma = 1 / 2.2f;
+    FragColor = result; // vec4(pow(result.rgb, vec3(gamma,gamma,gamma)), result.a);
     //FragColor = vec4(worldNormal * 0.5 + 0.5, 1.0f);
 
 }

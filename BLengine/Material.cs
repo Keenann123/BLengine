@@ -18,11 +18,8 @@ namespace RenderingEngine
         Texture SpecularMap;
         bool UseSpecular = false;
         public ShaderManager.ShaderFlags flags = 0;
-        public MeshComponent owner;
-        public Material(string diffuseTexture, string normalTexture, string specularTexture, MeshComponent m)
+        public Material(string diffuseTexture, string normalTexture, string specularTexture)
         {
-            owner = m;
-
             if(diffuseTexture != "")
             {
                 UseDiffuse = true;

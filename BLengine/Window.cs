@@ -37,7 +37,7 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            mesh1 = new MeshComponent();
+          //  mesh1 = new MeshComponent();
             mesh2 = new MeshComponent();
             mesh2.SetTranslation(0.0f, 0.0f, 10.0f);
             tex = new Texture("Textures/test.png");
@@ -63,10 +63,10 @@ namespace RenderingEngine
         {
             Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
             base.OnRenderFrame(e);
-            mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime), 0.5f);
-            mesh1.SetTranslation((float)Math.Sin(Util.TotalTime) * 3, (float)Math.Cos(Util.TotalTime) * 3, (float)Math.Sin(Util.TotalTime) * 2);
-            mesh1.SetScale(100.0f);
-            mesh1.SetRotation(0, 0, Util.TotalTime * 10);
+          //  mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime), 0.5f);
+        //    mesh1.SetTranslation((float)Math.Sin(Util.TotalTime) * 3, (float)Math.Cos(Util.TotalTime) * 3, (float)Math.Sin(Util.TotalTime) * 2);
+        //    mesh1.SetScale(100.0f);
+        //    mesh1.SetRotation(0, 0, Util.TotalTime * 10);
 
             _controller.Update(this, (float)e.Time);
 
@@ -80,7 +80,7 @@ namespace RenderingEngine
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
 
             ImGui.Text("Camera Pos: " + player.GetCamera().Position);
-            ImGui.Text("Shader Flags: " + mesh1.mat.flags.ToString());
+            //ImGui.Text("Shader Flags: " + mesh1.mat.flags.ToString());
 
 
             if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
@@ -96,10 +96,7 @@ namespace RenderingEngine
             if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                {
-                    mesh.mat.flags = 0;
                     mesh.mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
-                }
             }
             if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
             {

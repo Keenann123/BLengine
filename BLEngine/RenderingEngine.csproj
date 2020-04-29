@@ -124,13 +124,16 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="CameraManager.cs" />
+    <Compile Include="Cube.cs" />
     <Compile Include="DeferredRenderer.cs" />
     <Compile Include="EntityComponent.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="ImGuiConsole.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="FullscreenQuad.cs" />
+    <Compile Include="MeshComponent_.cs" />
     <Compile Include="MeshManager.cs" />
+    <Compile Include="OBJVolume.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="RenderingParameters.cs" />
     <Compile Include="ShaderManager.cs" />
@@ -143,10 +146,14 @@
     <Compile Include="Shader.cs" />
     <Compile Include="ImGuiTexture.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="Volume.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Meshes\teapot.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Shaders\default.frag">
