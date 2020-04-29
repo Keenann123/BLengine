@@ -43,8 +43,8 @@ namespace RenderingEngine
             GL.BindVertexArray(VertexArrayObject);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetVerts().Length * sizeof(float), vol.GetVerts().ToArray(), BufferUsageHint.StaticDraw);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, vol.GetIndices().Length * sizeof(uint), vol.GetIndices().ToArray(), BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetVerts().Length * 8, vol.GetVerts().ToArray(), BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, vol.GetIndices(0).Length * 3, vol.GetIndices(0).ToArray(), BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
             GL.EnableVertexAttribArray(0);/*
             int texCoordLocation = mat.shader.GetAttribLocation("aTexCoord");
