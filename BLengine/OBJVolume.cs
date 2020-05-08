@@ -74,7 +74,7 @@ namespace RenderingEngine
                 verts.Add(face.Item2.Position);
                 verts.Add(face.Item3.Position);
             }
-
+     
             return verts.ToArray();
         }
 

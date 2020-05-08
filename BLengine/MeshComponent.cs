@@ -43,16 +43,25 @@ namespace RenderingEngine
             GL.BindVertexArray(VertexArrayObject);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetVerts().Length * 8, vol.GetVerts().ToArray(), BufferUsageHint.StaticDraw);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, vol.GetIndices(0).Length * 3, vol.GetIndices(0).ToArray(), BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetVerts().Length * Vector3.SizeInBytes, vol.GetVerts().ToArray(), BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, vol.GetIndices().Length * sizeof(uint), vol.GetIndices(0).ToArray(), BufferUsageHint.StaticDraw);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.EnableVertexAttribArray(0);/*
+            GL.EnableVertexAttribArray(0);
+
             int texCoordLocation = mat.shader.GetAttribLocation("aTexCoord");
-            GL.EnableVertexAttribArray(texCoordLocation);
             int normalLocation = mat.shader.GetAttribLocation("aNormal");
+
+            //normals
+            GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetNormals().Length * Vector3.SizeInBytes, vol.GetNormals().ToArray(), BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 5 * sizeof(float));*/
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 0, 0);
+
+            //TextCoords, BROKEN ATM
+            GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetTextureCoords().Length * Vector2.SizeInBytes, vol.GetTextureCoords().ToArray(), BufferUsageHint.StaticDraw);
+            GL.EnableVertexAttribArray(texCoordLocation);
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 0, 0); //Something's fucked up here I bet
 
         }
 
