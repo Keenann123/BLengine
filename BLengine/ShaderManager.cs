@@ -8,7 +8,7 @@ namespace RenderingEngine
 {
     class ShaderManager
     {
-        private static Dictionary<ShaderFlags, Shader> Shaders = new Dictionary<ShaderFlags, Shader>();
+        private static Dictionary<Tuple<ShaderFlags, ShaderType_BL>, Shader> Shaders = new Dictionary<Tuple<ShaderFlags, ShaderType_BL>, Shader>();
 
         public static int GetShaderCount() { return Shaders.Count; }
 
@@ -38,21 +38,21 @@ namespace RenderingEngine
 
         public static void put(ShaderType_BL type, ShaderFlags flags, Shader shader)
         {
-            Shaders[flags] = shader;
+            Shaders[Tuple.Create(flags, type)] = shader;
         }
 
         public static Shader get(ShaderType_BL type, ShaderFlags flags = 0)
         {
-            if (Shaders.ContainsKey(flags))
+            if (Shaders.ContainsKey(Tuple.Create(flags, type)))
             {
                 //Return existing shader
-                return Shaders[flags];
+                return Shaders[Tuple.Create(flags, type)];
             }
             else
             {
                 //Create shader
                 Shader shader = new Shader(type, flags);
-                Shaders.Add(flags, shader);
+                Shaders.Add(Tuple.Create(flags, type), shader);
                 return shader;
             }
         }
