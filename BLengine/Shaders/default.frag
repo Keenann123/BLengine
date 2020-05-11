@@ -69,6 +69,6 @@ void main()
     #endif
     float gamma = 1 / 2.2f;
     FragColor = result; // vec4(pow(result.rgb, vec3(gamma,gamma,gamma)), result.a);
-    //FragColor = vec4(worldNormal * 0.5 + 0.5, 1.0f);
+    FragColor = vec4(worldNormal * 0.5 + 0.5, 1.0f);
 
 }

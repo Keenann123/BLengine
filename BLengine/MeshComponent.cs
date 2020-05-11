@@ -92,7 +92,7 @@ namespace RenderingEngine
 
         public void Update()
         {
-            Matrix4 scale = Matrix4.CreateScale(Scale.X, Scale.Y, Scale.Z);
+            Matrix4 scale = Matrix4.CreateScale(Scale.X / 100f, Scale.Y / 100f, Scale.Z / 100f);
             Matrix4 rotation =  Matrix4.CreateRotationX(MathHelper.DegreesToRadians(Rotation.X)) * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(Rotation.Y)) * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation.Z));
             Matrix4 translation = Matrix4.CreateTranslation(Translation);
             ModelMatrix = scale * rotation * translation;
