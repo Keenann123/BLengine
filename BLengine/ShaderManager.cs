@@ -17,7 +17,8 @@ namespace RenderingEngine
             Default,
             GBuffer,
             Deferred_Directional,
-            ImGui
+            ImGui,
+            DebugGBuffer
         };
 
         [Flags]

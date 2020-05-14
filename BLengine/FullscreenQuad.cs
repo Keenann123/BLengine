@@ -32,16 +32,16 @@ namespace RenderingEngine
         int VertexArrayObject;
         int ElementBufferObject;
 
-        public FullscreenQuad()
+        public FullscreenQuad(ShaderType_BL type)
         {
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
-            Initialise();
+            Initialise(type);
         }
-        void Initialise()
+        void Initialise(ShaderType_BL type)
         {
-            shader = ShaderManager.get(ShaderType_BL.Default, ShaderFlags.NONE);
+            shader = ShaderManager.get(type, ShaderFlags.NONE);
             GL.BindVertexArray(VertexArrayObject);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
@@ -55,9 +55,9 @@ namespace RenderingEngine
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
         }
 
-        public void Render(ShaderType_BL type)
+        public void Render()
         {
-            
+            shader.UseShader();
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
         }

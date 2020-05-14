@@ -8,7 +8,7 @@ uniform vec3 DiffuseColour;
 uniform sampler2D diffuseTexture;
 uniform sampler2D normalTexture;
 
-out vec4 FragColor;
+out vec4 FragColour;
 
 void main()
 {
@@ -68,7 +68,7 @@ void main()
       //  result = vec4(specular.rgb, 1.0f);
     #endif
     float gamma = 1 / 2.2f;
-    FragColor = result; // vec4(pow(result.rgb, vec3(gamma,gamma,gamma)), result.a);
-    FragColor = vec4(worldNormal * 0.5 + 0.5, 1.0f);
+    FragColour = result; // vec4(pow(result.rgb, vec3(gamma,gamma,gamma)), result.a);
+    FragColour = vec4(worldNormal * 0.5 + 0.5, 1.0f);
 
 }

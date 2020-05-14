@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics;
 
 namespace RenderingEngine
 {
@@ -19,6 +20,13 @@ namespace RenderingEngine
 
         static uint LightingRT;
         static uint LightingFBOHandle;
+
+        public static void Render()
+        {
+            BeginRenderToGBuffer();
+            RenderToGBuffer();
+            EndRenderToGBuffer();
+        }
 
         public static void RenderToGBuffer()
         {
@@ -43,12 +51,12 @@ namespace RenderingEngine
         {
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, AlbedoRT);
-            GL.ActiveTexture(TextureUnit.Texture1);
-            GL.BindTexture(TextureTarget.Texture2D, NormalRT);
-            GL.ActiveTexture(TextureUnit.Texture2);
-            GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
-            GL.ActiveTexture(TextureUnit.Texture3);
-            GL.BindTexture(TextureTarget.Texture2D, DepthRT);
+        //    GL.ActiveTexture(TextureUnit.Texture1);
+        //    GL.BindTexture(TextureTarget.Texture2D, NormalRT);
+         //   GL.ActiveTexture(TextureUnit.Texture2);
+        //    GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
+        //    GL.ActiveTexture(TextureUnit.Texture3);
+        //    GL.BindTexture(TextureTarget.Texture2D, DepthRT);
         }
 
         public static void SetupGBuffer()

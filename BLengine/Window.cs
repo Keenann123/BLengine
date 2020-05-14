@@ -19,6 +19,7 @@ namespace RenderingEngine
         public static int _Height = 900;
         MeshComponent mesh1;
         MeshComponent mesh2;
+        FullscreenQuad Q;
         Texture tex;
         Texture tex2;
         Player player;
@@ -39,7 +40,9 @@ namespace RenderingEngine
             base.OnLoad(e);
           //  mesh1 = new MeshComponent();
             mesh2 = new MeshComponent();
+            Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer);
             mesh2.SetTranslation(0.0f, 0.0f, 0.0f);
+            mesh2.SetRotation(0.0f, 90.0f, 0.0f);
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
@@ -72,7 +75,6 @@ namespace RenderingEngine
 
             GL.ClearColor(new Color4(0.1f, 0.07f, 0.13f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-
 
             #region Render Debug ImGUI
             ImGui.Begin("Render Debug");
@@ -146,7 +148,7 @@ namespace RenderingEngine
                 foreach(var mesh in MeshManager.Meshes)
                 {
                     Shader shader = new Shader(mesh2.mat.shader.SourceCode_frag, mesh2.mat.shader.SourceCode_vert);
-                    ShaderManager.put(ShaderType_BL.Default, mesh.mat.flags, shader);
+                    ShaderManager.put(ShaderType_BL.GBuffer, mesh.mat.flags, shader);
                 }
             
             }
@@ -170,7 +172,12 @@ namespace RenderingEngine
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
 
-            MeshManager.Render(ShaderManager.ShaderType_BL.Default);
+            DeferredRenderer.Render();
+           
+            MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
+     
+            DeferredRenderer.BindGBufferTextures();
+           // Q.Render(); // uncomment for deferred debug :)
 
             _controller.Render();
             
