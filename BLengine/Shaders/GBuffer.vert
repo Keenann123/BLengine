@@ -16,7 +16,7 @@ void main()
 	texCoord = aTexCoord;
 	worldPosition = (vec4(aPosition, 1.0f) * model).rgb;
 
-    worldNormal = normalize(vec4(aNormal, 0.0f) * model).rgb;
+    worldNormal = normalize(vec4(aNormal.rgb, 0.0f) * inverse(transpose(model))).rgb;
     gl_Position = vec4(aPosition, 1.0) * model * view * projection;
     depth = gl_Position.z;
 

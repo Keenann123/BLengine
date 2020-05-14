@@ -15,8 +15,8 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
-        public static int _Width = 1440;
-        public static int _Height = 900;
+        public static int _Width = 1280;
+        public static int _Height = 720;
         MeshComponent mesh1;
         MeshComponent mesh2;
         FullscreenQuad Q;
@@ -57,7 +57,7 @@ namespace RenderingEngine
 
             // Update the opengl viewport
             GL.Viewport(0, 0, Width, Height);
-
+            DeferredRenderer.UpdateRenderViewport(Width, Height);
             // Tell ImGui of the new size
             _controller.WindowResized(Width, Height);
         }
@@ -174,10 +174,10 @@ namespace RenderingEngine
 
             DeferredRenderer.Render();
            
-            MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
+           // MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
      
             DeferredRenderer.BindGBufferTextures();
-           // Q.Render(); // uncomment for deferred debug :)
+            Q.Render(); // uncomment for deferred debug :)
 
             _controller.Render();
             

@@ -63,14 +63,12 @@ namespace RenderingEngine
             if (UseDiffuse)
             {
                 DiffuseMap.UseTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
-                //flags = ShaderManager.ShaderFlags.USE_DIFFUSE_TEXTURE;
                 shader.BindInt("diffuseTexture", 0);
             }
 
             if (UseNormal)
             {
                 NormalMap.UseTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture1);
-                //flags = ShaderManager.ShaderFlags.USE_NORMAL_TEXTURE;
                 shader.BindInt("normalTexture", 1);
             }
 

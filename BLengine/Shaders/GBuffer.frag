@@ -11,12 +11,12 @@ uniform sampler2D specularTexture;
 layout(location = 0) out vec4 DiffuseColour;
 layout(location = 1) out vec4 NormalColour;
 layout(location = 2) out vec4 SpecularColour;
-layout(location = 3) out float Depth;
+layout(location = 3) out float DepthOut;
 
 void main()
 {
-    DiffuseColour = vec4(worldNormal * 0.5 + 0.5, 1.0f);
+    DiffuseColour = texture(diffuseTexture, texCoord);
     NormalColour = vec4(worldNormal * 0.5 + 0.5, 1.0f);
     SpecularColour = vec4(texture(specularTexture, texCoord).rgb, 1.0f);
-    Depth = depth;
+    DepthOut = depth;
 }

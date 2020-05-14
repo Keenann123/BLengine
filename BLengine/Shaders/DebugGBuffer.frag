@@ -9,5 +9,5 @@ layout(location = 0) out vec4 FragColour;
 void main()
 {
 	FragColour = vec4(texture(GBufferDiffuse, texCoord).rgb, 1.0f);
-	//FragColour = vec4(texCoord.xy, 0.0f, 1.0f);
+	//FragColour = vec4(texCoord.xy * 0.5, 0.0f, 1.0f);
 }
