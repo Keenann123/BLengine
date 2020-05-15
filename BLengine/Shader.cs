@@ -22,20 +22,8 @@ namespace RenderingEngine
         public ActiveUniformType Type;
     }
 
-
-
-   //class ShaderInjection
-   // {
-   //     public enum ShaderInjectionType { Vertex, Fragment }
-   //     public ShaderInjectionType type;
-   //     public ShaderFlags flags;
-   //     public ShaderInjection_definitions definition;
-   // }
-
     class Shader
     {
-        //public Dictionary<ShaderInjection, string> ShaderDefineInjections = new Dictionary<ShaderInjection, string>();
-
         public readonly string Name;
         public int Program { get; private set; }
         private readonly Dictionary<string, int> UniformToLocation = new Dictionary<string, int>();

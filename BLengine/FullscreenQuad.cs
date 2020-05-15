@@ -12,7 +12,7 @@ namespace RenderingEngine
 {
     class FullscreenQuad
     {
-        Shader shader;
+        public Shader shader;
         float[] vertices =
                            {
                             //Position          Texture coordinates              Normals 

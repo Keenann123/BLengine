@@ -19,6 +19,7 @@ namespace RenderingEngine
         public static int _Height = 720;
         MeshComponent mesh1;
         MeshComponent mesh2;
+        MeshComponent[] Meshes = new MeshComponent[100];
         FullscreenQuad Q;
         Texture tex;
         Texture tex2;
@@ -40,9 +41,18 @@ namespace RenderingEngine
             base.OnLoad(e);
           //  mesh1 = new MeshComponent();
             mesh2 = new MeshComponent();
+            
+            for(int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Meshes[i + j] = new MeshComponent();
+                    Meshes[i + j].SetTranslation(i * 10, j * 10, 0);
+                }
+            }
             Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer);
             mesh2.SetTranslation(0.0f, 0.0f, 0.0f);
-            mesh2.SetRotation(0.0f, 90.0f, 0.0f);
+            mesh2.SetRotation(0.0f, 0.0f, 0.0f);
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
@@ -171,9 +181,11 @@ namespace RenderingEngine
             player.GetCamera().ProcessInput();
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
 
             DeferredRenderer.Render();
-           
+            GL.Disable(EnableCap.CullFace);
            // MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
      
             DeferredRenderer.BindGBufferTextures();

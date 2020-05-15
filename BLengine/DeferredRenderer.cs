@@ -27,7 +27,7 @@ namespace RenderingEngine
         public static void Render()
         {
             BeginRenderToGBuffer();
-            GL.ClearColor(new Color4(0.1f, 0.07f, 0.13f, 1.0f)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 0.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             viewport.Width = TextureWidth;
             viewport.Height = TextureHeight;
@@ -84,6 +84,7 @@ namespace RenderingEngine
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, AlbedoRT, 0);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             GL.GenTextures(1, out NormalRT);
             GL.BindTexture(TextureTarget.Texture2D, NormalRT);
@@ -93,6 +94,7 @@ namespace RenderingEngine
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment1, TextureTarget.Texture2D, NormalRT, 0);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             GL.GenTextures(1, out SpecularRT);
             GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
@@ -102,6 +104,7 @@ namespace RenderingEngine
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment2, TextureTarget.Texture2D, SpecularRT, 0);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             GL.GenTextures(1, out DepthRT);
             GL.BindTexture(TextureTarget.Texture2D, DepthRT);
@@ -112,6 +115,7 @@ namespace RenderingEngine
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment3, TextureTarget.Texture2D, DepthRT, 0);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
             // Create internal depth buffer
             uint internalDepthBuffer;
@@ -131,7 +135,8 @@ namespace RenderingEngine
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment2Ext, TextureTarget.Texture2D, SpecularRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment3Ext, TextureTarget.Texture2D, DepthRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, internalDepthBuffer, 0);
-
+            DrawBuffersEnum[] bufs = new DrawBuffersEnum[4] { (DrawBuffersEnum)FramebufferAttachment.ColorAttachment0, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment1, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment2, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment3 };  
+            GL.DrawBuffers(4, bufs);
             // Create the lighting buffer
             GL.GenTextures(1, out LightingRT);
             GL.BindTexture(TextureTarget.Texture2D, LightingRT);

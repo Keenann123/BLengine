@@ -11,7 +11,7 @@ namespace RenderingEngine
         public Vector3 Position;
         public Vector3 Normal;
         public Vector2 TextureCoord;
-
+        
         public FaceVertex(Vector3 pos, Vector3 norm, Vector2 texcoord)
         {
             Position = pos;
@@ -22,6 +22,8 @@ namespace RenderingEngine
 
     internal class ObjVolume : Volume
     {
+        static Dictionary<String, ObjVolume> volumes = new Dictionary<String, ObjVolume>();
+
         private List<Tuple<FaceVertex, FaceVertex, FaceVertex>> faces = new List<Tuple<FaceVertex, FaceVertex, FaceVertex>>();
 
         public override int VertCount { get { return faces.Count * 3; } }
@@ -32,6 +34,19 @@ namespace RenderingEngine
 
         public override int TextureCoordsCount { get { return faces.Count * 3; } }
 
+        public static ObjVolume get(String filename)
+        {
+            if(volumes.ContainsKey(filename))
+            {
+                return volumes[filename];
+            }
+            else
+            {
+                ObjVolume vol = ObjVolume.LoadFromFile(filename);
+                volumes.Add(filename, vol);
+                return vol;
+            }
+        }
 
         public override Vector3[] GetNormals()
         {

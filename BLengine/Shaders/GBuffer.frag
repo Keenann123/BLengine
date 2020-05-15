@@ -17,6 +17,6 @@ void main()
 {
     DiffuseColour = texture(diffuseTexture, texCoord);
     NormalColour = vec4(worldNormal * 0.5 + 0.5, 1.0f);
-    SpecularColour = vec4(texture(specularTexture, texCoord).rgb, 1.0f);
+    SpecularColour = vec4(1.0f, 0.0f, 1.0f, 1.0f);
     DepthOut = depth;
 }
