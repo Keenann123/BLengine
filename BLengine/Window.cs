@@ -19,7 +19,8 @@ namespace RenderingEngine
         public static int _Height = 720;
         MeshComponent mesh1;
         MeshComponent mesh2;
-        MeshComponent[] Meshes = new MeshComponent[100];
+        public static double fps;
+        MeshComponent[] Meshes = new MeshComponent[10000];
         FullscreenQuad Q;
         Texture tex;
         Texture tex2;
@@ -34,6 +35,7 @@ namespace RenderingEngine
                                     4, 6, GraphicsContextFlags.ForwardCompatible)
         {
             Title += ": OpenGL Version: " + GL.GetString(StringName.Version);
+            
         }
 
         protected override void OnLoad(EventArgs e)
@@ -42,9 +44,9 @@ namespace RenderingEngine
           //  mesh1 = new MeshComponent();
             mesh2 = new MeshComponent();
             
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 20; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 20; j++)
                 {
                     Meshes[i + j] = new MeshComponent();
                     Meshes[i + j].SetTranslation(i * 10, j * 10, 0);
@@ -75,6 +77,8 @@ namespace RenderingEngine
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             Util.TotalTime += (float)e.Time;  //TotalTime += deltaTime
+            fps = 1.0 / e.Time;
+            base.Title = "Legend286 and Boomer678's Rendering Engine" + ": OpenGL Version: " + GL.GetString(StringName.Version) + ": frametime: " + (int)fps;
             base.OnRenderFrame(e);
           //  mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime), 0.5f);
         //    mesh1.SetTranslation((float)Math.Sin(Util.TotalTime) * 3, (float)Math.Cos(Util.TotalTime) * 3, (float)Math.Sin(Util.TotalTime) * 2);

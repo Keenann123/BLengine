@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using OpenTK;
@@ -38,11 +39,14 @@ namespace RenderingEngine
         {
             if(volumes.ContainsKey(filename))
             {
+                Debug.Print("Returning loaded Obj: " + filename);
                 return volumes[filename];
             }
             else
             {
+                Debug.Print("Loading Obj file: " + filename);
                 ObjVolume vol = ObjVolume.LoadFromFile(filename);
+                Debug.Print("Loaded Obj from disk: " + filename);
                 volumes.Add(filename, vol);
                 return vol;
             }

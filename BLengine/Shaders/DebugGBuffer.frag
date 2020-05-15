@@ -12,6 +12,6 @@ void main()
 	vec4 depth = vec4(texture(GBufferDepth, texCoord * 2 - 1).rgb, 1.0f);
 	vec4 normal = vec4(texture(GBufferNormal, texCoord * 2 - vec2(0, 1)).rgb, 1.0f);
 	vec4 specular = vec4(texture(GBufferSpecular, texCoord * 2).rgb, 1.0f);
-	FragColour = normal + depth + diffuse + specular;
+	FragColour = normal + (depth / 100) + diffuse + specular;
 	//FragColour = vec4(texCoord.xy * 0.5, 0.0f, 1.0f);
 }

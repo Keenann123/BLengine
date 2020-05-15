@@ -12,8 +12,8 @@ namespace RenderingEngine
 {
     class DeferredRenderer
     {
-        static int TextureWidth = 512;
-        static int TextureHeight = 512;
+        static int TextureWidth = 2048;
+        static int TextureHeight = 2048;
         static uint AlbedoRT;
         static uint NormalRT;
         static uint SpecularRT;
@@ -135,8 +135,9 @@ namespace RenderingEngine
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment2Ext, TextureTarget.Texture2D, SpecularRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment3Ext, TextureTarget.Texture2D, DepthRT, 0);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, internalDepthBuffer, 0);
-            DrawBuffersEnum[] bufs = new DrawBuffersEnum[4] { (DrawBuffersEnum)FramebufferAttachment.ColorAttachment0, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment1, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment2, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment3 };  
+            DrawBuffersEnum[] bufs = new DrawBuffersEnum[4] { (DrawBuffersEnum)FramebufferAttachment.ColorAttachment0, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment1, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment2, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment3 };
             GL.DrawBuffers(4, bufs);
+
             // Create the lighting buffer
             GL.GenTextures(1, out LightingRT);
             GL.BindTexture(TextureTarget.Texture2D, LightingRT);
@@ -149,7 +150,7 @@ namespace RenderingEngine
             GL.GenFramebuffers(1, out LightingFBOHandle);
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, LightingFBOHandle);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, LightingRT, 0);
-            
+           
             EndRenderToGBuffer();
         }
     }

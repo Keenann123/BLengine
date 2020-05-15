@@ -131,7 +131,6 @@
     <Compile Include="ImGuiConsole.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="FullscreenQuad.cs" />
-    <Compile Include="MeshComponent_.cs" />
     <Compile Include="MeshManager.cs" />
     <Compile Include="OBJVolume.cs" />
     <Compile Include="Player.cs" />
@@ -151,8 +150,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Meshes\cube_1m.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Meshes\sphere_lowres.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Meshes\teapot.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />

@@ -13,7 +13,7 @@ namespace RenderingEngine
         {
             GraphicsMode mode = new GraphicsMode(new ColorFormat(24), 16, 8, 4, new ColorFormat(32), 2, false);
             Window wnd = new Window(mode);
-            wnd.Run();
+            wnd.Run(60.0, 60.0);
         }
     }
 }
