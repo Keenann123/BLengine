@@ -13,10 +13,15 @@ layout(location = 1) out vec4 NormalColour;
 layout(location = 2) out vec4 SpecularColour;
 layout(location = 3) out float DepthOut;
 
+float linearize_depth(float d, float nearz, float farz)
+{
+    return (d-nearz)/(farz-nearz);
+}
+
 void main()
 {
     DiffuseColour = texture(diffuseTexture, texCoord);
     NormalColour = vec4(worldNormal * 0.5 + 0.5, 1.0f);
     SpecularColour = vec4(1.0f, 0.0f, 1.0f, 1.0f);
-    DepthOut = depth;
+    DepthOut = linearize_depth(depth, 1.0f, 10000.0f);
 }

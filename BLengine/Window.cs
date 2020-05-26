@@ -25,6 +25,7 @@ namespace RenderingEngine
         Texture tex;
         Texture tex2;
         Player player;
+        LightDirectional light = new LightDirectional(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f));
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
 
@@ -41,20 +42,17 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-          //  mesh1 = new MeshComponent();
-            mesh2 = new MeshComponent();
-            
-            for(int i = 0; i < 20; i++)
+
+            for(int i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 8; j++)
                 {
-                    Meshes[i + j] = new MeshComponent();
+                    Meshes[i + j] = new MeshComponent("Meshes/cube_1m.obj");
                     Meshes[i + j].SetTranslation(i * 10, j * 10, 0);
                 }
             }
             Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer);
-            mesh2.SetTranslation(0.0f, 0.0f, 0.0f);
-            mesh2.SetRotation(0.0f, 0.0f, 0.0f);
+
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
             _controller = new ImGuiController(Width, Height);
@@ -96,7 +94,7 @@ namespace RenderingEngine
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
 
             ImGui.Text("Camera Pos: " + player.GetCamera().Position);
-            ImGui.Text("Shader Flags: " + mesh2.mat.flags.ToString());
+            
 
 
             if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
@@ -190,11 +188,26 @@ namespace RenderingEngine
 
             DeferredRenderer.Render();
             GL.Disable(EnableCap.CullFace);
-           // MeshManager.Render(ShaderManager.ShaderType_BL.GBuffer);
-     
-            DeferredRenderer.BindGBufferTextures();
-            Q.Render(); // uncomment for deferred debug :)
+          //  DeferredRenderer.BeginRenderToLightingBuffer();
+          //  DeferredRenderer.RenderLighting();
+          //  DeferredRenderer.EndRenderToLightingBuffer();
 
+            DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
+        // render debug mode
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_DEBUG)
+            {
+                DeferredRenderer.BindGBufferTextures();
+                Q.Render();
+            }
+            // render light texture 
+            if(DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_LIT)
+            {
+                DeferredRenderer.BindLightingTexture();
+                Q.shader = ShaderManager.get(ShaderType_BL.Lighting, ShaderFlags.LIT);
+                Q.Render();
+            }
+
+          //  DeferredRenderer.UnbindGBufferTextures();
             _controller.Render();
             
             Util.CheckGLError("End of frame");

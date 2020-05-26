@@ -17,76 +17,37 @@ namespace RenderingEngine
         Vector3 Rotation = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 Scale = new Vector3(1.0f, 1.0f, 1.0f);
         ObjVolume vol;
-        int VertexBufferObject;
-        int VertexArrayObject;
-        int ElementBufferObject;
 
         public Material mat;
 
-        public bool shaderChanged = false; 
+        public bool shaderChanged = false;
 
-        public MeshComponent()
+        public MeshComponent(string filename)
         {
             Update();
-            vol = ObjVolume.get("Meshes/sphere_lowres.obj");
-            VertexBufferObject = GL.GenBuffer();
-            VertexArrayObject = GL.GenVertexArray();
-            ElementBufferObject = GL.GenBuffer();
             mat = new Material("Textures/test.png", "Textures/testnormal.png", "");
+            vol = ObjVolume.get(filename, mat);
             MeshManager.AddMesh(this);
-
-            Initialise();
-        }
-        void Initialise()
-        {
-           
-            GL.BindVertexArray(VertexArrayObject);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetVerts().Length * Vector3.SizeInBytes, vol.GetVerts().ToArray(), BufferUsageHint.StaticDraw);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, vol.GetIndices().Length * sizeof(uint), vol.GetIndices(0).ToArray(), BufferUsageHint.StaticDraw);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-            GL.EnableVertexAttribArray(0);
-
-            int texCoordLocation = mat.shader.GetAttribLocation("aTexCoord");
-            int normalLocation = mat.shader.GetAttribLocation("aNormal");
-
-            //normals
-            GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetNormals().Length * Vector3.SizeInBytes, vol.GetNormals().ToArray(), BufferUsageHint.StaticDraw);
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 0, 0);
-
-            //TextCoords, BROKEN ATM
-            GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-            GL.BufferData(BufferTarget.ArrayBuffer, vol.GetTextureCoords().Length * Vector2.SizeInBytes * 8, vol.GetTextureCoords().ToArray(), BufferUsageHint.StaticDraw);
-            GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 0, 0); //Something's fucked up here I bet
-
         }
 
         public void Render(ShaderType_BL type)
         {
             // add material stuff here
             mat.RenderMaterial();
-
-            mat.shader = ShaderManager.get(type, mat.flags);
-
-            mat.shader.BindMatrix4("model", GetModelMatrix());
+            mat.SetShader(type);
+            mat.UpdateWorldTransformMatrix(GetModelMatrix());
             mat.shader.BindMatrix4("view", CameraManager.GetActiveCamera().GetViewMatrix());
             mat.shader.BindMatrix4("projection", CameraManager.GetActiveCamera().GetProjectionMatrix());
             mat.shader.BindVector3("viewPos", CameraManager.GetActiveCamera().Position);
             mat.shader.BindFloat("FogEndDistance", RenderingParameters.FogEndDistance);
-
-            GL.BindVertexArray(VertexArrayObject);
-            GL.DrawElements(PrimitiveType.Triangles, vol.GetIndices().ToArray().Length, DrawElementsType.UnsignedInt, 0);
+            
+            vol.Render();
         }
         public void OnUnload()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.DeleteBuffer(VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-            GL.DeleteBuffer(ElementBufferObject);
+            vol.OnUnload();
             MeshManager.Meshes.Remove(this);
         }
 

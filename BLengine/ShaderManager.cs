@@ -18,7 +18,10 @@ namespace RenderingEngine
             GBuffer,
             Deferred_Directional,
             ImGui,
-            DebugGBuffer
+            DebugGBuffer,
+            Deferred_Spot,
+            Deferred_Point,
+            Lighting
         };
 
         [Flags]

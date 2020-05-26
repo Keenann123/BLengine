@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 
 namespace RenderingEngine
 {
@@ -23,6 +24,11 @@ namespace RenderingEngine
 
     internal class ObjVolume : Volume
     {
+        static int VertexBufferObject;
+        static int VertexArrayObject;
+        static int ElementBufferObject;
+        static Material mat;
+
         static Dictionary<String, ObjVolume> volumes = new Dictionary<String, ObjVolume>();
 
         private List<Tuple<FaceVertex, FaceVertex, FaceVertex>> faces = new List<Tuple<FaceVertex, FaceVertex, FaceVertex>>();
@@ -35,7 +41,7 @@ namespace RenderingEngine
 
         public override int TextureCoordsCount { get { return faces.Count * 3; } }
 
-        public static ObjVolume get(String filename)
+        public static ObjVolume get(String filename, Material material)
         {
             if(volumes.ContainsKey(filename))
             {
@@ -48,10 +54,54 @@ namespace RenderingEngine
                 ObjVolume vol = ObjVolume.LoadFromFile(filename);
                 Debug.Print("Loaded Obj from disk: " + filename);
                 volumes.Add(filename, vol);
+                mat = material;
+                vol.InitialiseArrays();
                 return vol;
             }
         }
 
+        public void InitialiseArrays()
+        {
+            Debug.Print("Initialising Vertex Buffer Data...");
+            VertexBufferObject = GL.GenBuffer();
+            VertexArrayObject = GL.GenVertexArray();
+            ElementBufferObject = GL.GenBuffer();
+
+            GL.BindVertexArray(VertexArrayObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, GetVerts().Length * Vector3.SizeInBytes, GetVerts().ToArray(), BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, GetIndices().Length * sizeof(uint), GetIndices(0).ToArray(), BufferUsageHint.StaticDraw);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
+            GL.EnableVertexAttribArray(0);
+
+            int texCoordLocation = mat.shader.GetAttribLocation("aTexCoord");
+            int normalLocation = mat.shader.GetAttribLocation("aNormal");
+
+            //normals
+            GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+            GL.BufferData(BufferTarget.ArrayBuffer, GetNormals().Length * Vector3.SizeInBytes, GetNormals().ToArray(), BufferUsageHint.StaticDraw);
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 0, 0);
+
+            //TextCoords, BROKEN ATM
+            GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+            GL.BufferData(BufferTarget.ArrayBuffer, GetTextureCoords().Length * Vector2.SizeInBytes * 8, GetTextureCoords().ToArray(), BufferUsageHint.StaticDraw);
+            GL.EnableVertexAttribArray(texCoordLocation);
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 0, 0); //Something's fucked up here I bet
+        }
+
+        public void Render()
+        {
+            GL.BindVertexArray(VertexArrayObject);
+            GL.DrawElements(PrimitiveType.Triangles, GetIndices().ToArray().Length, DrawElementsType.UnsignedInt, 0);
+        }
+
+        public void OnUnload()
+        {
+            GL.DeleteBuffer(VertexBufferObject);
+            GL.DeleteBuffer(ElementBufferObject);
+        }
         public override Vector3[] GetNormals()
         {
             if (base.GetNormals().Length > 0)

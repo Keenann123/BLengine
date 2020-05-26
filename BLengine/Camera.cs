@@ -23,7 +23,7 @@ namespace RenderingEngine
         protected const float m_mouseSpeedY = 0.0035f;
         protected Vector3 m_up = Vector3.UnitZ;
 
-        public Camera(Entity parent)
+        public Camera()
         {
             
             Position = new Vector3(0.1f, -0.14f, 11f);
@@ -31,7 +31,7 @@ namespace RenderingEngine
 
             Direction = Vector3.Normalize(Position - LookTarget);
 
-            ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1280f / 720f, 0.01f, 1000); //fix aspect for resize
+            ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1280f / 720f, 1f, 10000); //fix aspect for resize
             ViewMatrix = CreateLookAt();
             CameraManager.AddCamera(this);
             CameraManager.SetActiveCamera(this);
@@ -39,6 +39,10 @@ namespace RenderingEngine
 
         protected MouseState m_prevMouse;
 
+        public void UpdateCameraMatrix(float width, float height)
+        {
+            ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, width / height, 1f, 10000); //fix aspect for resize
+        }
         public void ProcessInput()
         {
             var mouse = Mouse.GetState();

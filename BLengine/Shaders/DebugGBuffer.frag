@@ -4,14 +4,22 @@ uniform sampler2D GBufferNormal;
 uniform sampler2D GBufferSpecular;
 uniform sampler2D GBufferDepth;
 
+uniform vec3 cameraPosition;
+
+in vec3 viewRay;
 layout(location = 0) out vec4 FragColour;
 
 void main()
 {
 	vec4 diffuse = vec4(texture(GBufferDiffuse, texCoord * 2 - vec2(1, 0)).rgb, 1.0f);
 	vec4 depth = vec4(texture(GBufferDepth, texCoord * 2 - 1).rgb, 1.0f);
-	vec4 normal = vec4(texture(GBufferNormal, texCoord * 2 - vec2(0, 1)).rgb, 1.0f);
+	vec4 normal = texture(GBufferNormal, texCoord * 2 - vec2(0, 1));
 	vec4 specular = vec4(texture(GBufferSpecular, texCoord * 2).rgb, 1.0f);
-	FragColour = normal + (depth / 100) + diffuse + specular;
+
+	vec4 pixelPosition = vec4(cameraPosition - (normalize(viewRay) * depth.r), 0.0f) * normal.a;
+	FragColour = normal + vec4(depth.r * 100, depth.r * 100, depth.r * 100, 1.0f) + diffuse + specular;
 	//FragColour = vec4(texCoord.xy * 0.5, 0.0f, 1.0f);
+
+	
+
 }

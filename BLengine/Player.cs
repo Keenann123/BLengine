@@ -7,12 +7,12 @@ using OpenTK;
 
 namespace RenderingEngine
 {
-    class Player : Entity
+    class Player
     {
         Camera cam;
-        public Player() : base(new Vector3(0, 0, 0), new Quaternion(new Vector3(0, 0, 0)), new Vector3(1, 1, 1))
-        {
-            cam = new Camera(this);
+        public Player()
+        { 
+            cam = new Camera();
         }
 
         public Camera GetCamera()

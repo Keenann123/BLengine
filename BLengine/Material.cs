@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
+using static RenderingEngine.ShaderManager;
 
 namespace RenderingEngine
 {
@@ -56,6 +57,15 @@ namespace RenderingEngine
             shader = ShaderManager.get(ShaderManager.ShaderType_BL.Default, flags);
         }
 
+        public void UpdateWorldTransformMatrix(Matrix4 mat)
+        {
+            shader.BindMatrix4("model", mat);
+        }
+
+        public void SetShader(ShaderType_BL type)
+        {
+            shader = ShaderManager.get(type, flags);
+        }
         public void RenderMaterial()
         {
             shader.UseShader(); //Set shader

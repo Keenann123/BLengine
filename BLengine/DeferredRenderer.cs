@@ -12,8 +12,10 @@ namespace RenderingEngine
 {
     class DeferredRenderer
     {
+        
         static int TextureWidth = 2048;
         static int TextureHeight = 2048;
+
         static uint AlbedoRT;
         static uint NormalRT;
         static uint SpecularRT;
@@ -23,11 +25,19 @@ namespace RenderingEngine
         static Rectangle oldViewport;
         static uint LightingRT;
         static uint LightingFBOHandle;
+        static List<Light> lights = new List<Light>();
+        public static RenderingMode mode;
+        public enum RenderingMode
+        {
+            RENDER_DEBUG = 1,
+            RENDER_DIFFUSE_ONLY = 2,
+            RENDER_LIT = 4
+        }
 
         public static void Render()
         {
             BeginRenderToGBuffer();
-            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 0.0f)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 0.0f)); // clear to 0
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             viewport.Width = TextureWidth;
             viewport.Height = TextureHeight;
@@ -35,6 +45,24 @@ namespace RenderingEngine
             RenderToGBuffer();
             GL.Viewport(oldViewport);
             EndRenderToGBuffer();
+        }
+        public static void AddLightToRenderer(Light light)
+        {
+            lights.Add(light);
+        }
+
+        public static void RemoveLightFromRenderer(Light light)
+        {
+            lights.Remove(light);
+        }
+        public static void RenderLighting()
+        {
+            BeginRenderToLightingBuffer();
+            foreach(Light l in lights)
+            {
+                l.Render();
+            }
+            EndRenderToLightingBuffer();
         }
 
         public static void UpdateRenderViewport(int width, int height)
@@ -62,6 +90,11 @@ namespace RenderingEngine
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, LightingFBOHandle);
         }
 
+        public static void EndRenderToLightingBuffer()
+        {
+            GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
+        }
+
         public static void BindGBufferTextures()
         {
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -72,6 +105,18 @@ namespace RenderingEngine
             GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
             GL.ActiveTexture(TextureUnit.Texture3);
             GL.BindTexture(TextureTarget.Texture2D, DepthRT);
+        }
+
+        public static void UnbindGBufferTextures()
+        {
+            GL.ActiveTexture(0);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        public static void BindLightingTexture()
+        {
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, LightingRT);
         }
 
         public static void SetupGBuffer()
@@ -146,11 +191,13 @@ namespace RenderingEngine
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
-          
+
             GL.GenFramebuffers(1, out LightingFBOHandle);
             GL.BindFramebuffer(FramebufferTarget.FramebufferExt, LightingFBOHandle);
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0Ext, TextureTarget.Texture2D, LightingRT, 0);
-           
+            DrawBuffersEnum[] buflight = new DrawBuffersEnum[1] { (DrawBuffersEnum)FramebufferAttachment.ColorAttachment0 };
+            GL.DrawBuffers(1, buflight);
+
             EndRenderToGBuffer();
         }
     }
