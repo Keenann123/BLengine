@@ -126,7 +126,6 @@
     <Compile Include="CameraManager.cs" />
     <Compile Include="DeferredRenderer.cs" />
     <Compile Include="ImGuiConsole.cs" />
-    <Compile Include="LightDirectional.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="FullscreenQuad.cs" />
@@ -174,11 +173,11 @@
     <None Include="Shaders\default_imgui.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Deferred_Directional.vert">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Shaders\DeferredDirectional.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Deferred_Directional.frag">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Shaders\DeferredDirectional.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\GBuffer.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

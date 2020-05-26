@@ -60,11 +60,8 @@ namespace RenderingEngine
             
             GL.ClearColor(new Color4(1.0f, 1.0f, 0.0f, 1.0f)); // clear to 0
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-            viewport.Width = TextureWidth;
-            viewport.Height = TextureHeight;
-            GL.Viewport(viewport);
+
             RenderLighting();
-            GL.Viewport(oldViewport);
 
             EndRenderToLightingBuffer();
        }
@@ -80,15 +77,15 @@ namespace RenderingEngine
         
         public static void RenderLighting()
         {
-         //   viewport.Width = TextureWidth;
-         //   viewport.Height = TextureHeight;
-         //   GL.Viewport(viewport);
+            viewport.Width = TextureWidth;
+            viewport.Height = TextureHeight;
+            GL.Viewport(viewport);
 
             foreach (Light l in lights)
             {
                 l.Render();
             }
-          //  GL.Viewport(oldViewport);
+            GL.Viewport(oldViewport);
         }
         
         public static void UpdateRenderViewport(int width, int height)

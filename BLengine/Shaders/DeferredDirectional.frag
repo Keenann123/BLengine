@@ -25,5 +25,5 @@ void main()
     
     result = vec4(vec3(diff * colouredlight), 1.0f);
 
-    FragColour = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    FragColour = vec4(norm.rgb, 1.0f);// vec4(1.0f, 0.0f, 0.0f, 1.0f);
 }
