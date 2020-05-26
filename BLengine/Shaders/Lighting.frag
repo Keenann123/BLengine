@@ -1,9 +1,9 @@
 ﻿in vec2 texCoord;
-uniform sampler2D LightingTexture;
+uniform sampler2D LightingBuffer;
 
 layout(location = 0) out vec4 FragColour;
 
 void main()
 {
-	FragColour = texture(LightingTexture, texCoord);
+	FragColour = texture(LightingBuffer, texCoord);
 }

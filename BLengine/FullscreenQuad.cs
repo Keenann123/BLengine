@@ -62,6 +62,7 @@ namespace RenderingEngine
             shader.BindInt("GBufferNormal", 1);
             shader.BindInt("GBufferSpecular", 2);
             shader.BindInt("GBufferDepth", 3);
+            shader.BindInt("LightingBuffer", 4);
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
         }

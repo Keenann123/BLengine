@@ -30,14 +30,15 @@ namespace RenderingEngine
 
             position = pos;
             colour = col;
+
             DeferredRenderer.AddLightToRenderer(this);
         }
 
         public void Render()
         {
             Q.shader.UseShader();
-            Q.shader.BindVector3("LightColour", colour);
-            Q.shader.BindVector3("LightDirection", position);
+            Q.shader.BindVector3("lightColour", colour);
+            Q.shader.BindVector3("lightDirection", position);
             Q.shader.BindVector3("cameraPosition", CameraManager.GetActiveCamera().Position);
             Q.Render();
         }

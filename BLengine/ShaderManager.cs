@@ -9,6 +9,7 @@ namespace RenderingEngine
     class ShaderManager
     {
         private static Dictionary<Tuple<ShaderFlags, ShaderType_BL>, Shader> Shaders = new Dictionary<Tuple<ShaderFlags, ShaderType_BL>, Shader>();
+        public static Shader currentShader;
 
         public static int GetShaderCount() { return Shaders.Count; }
 
@@ -16,11 +17,12 @@ namespace RenderingEngine
         {
             Default,
             GBuffer,
-            DeferredDirectional,
             ImGui,
             DebugGBuffer,
-            Deferred_Spot,
-            Deferred_Point,
+            DeferredDirectional,
+            DeferredSpot,
+            DeferredPoint,
+            DeferredArea,
             Lighting
         };
 
@@ -59,6 +61,16 @@ namespace RenderingEngine
                 Shaders.Add(Tuple.Create(flags, type), shader);
                 return shader;
             }
+        }
+
+        public static void SetCurrentShader(Shader shader)
+        {
+            currentShader = shader;
+        }
+
+        public static Shader GetCurrentShader()
+        {
+            return currentShader;
         }
     }
 }

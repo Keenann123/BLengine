@@ -120,6 +120,7 @@ namespace RenderingEngine
         public void UseShader()
         {
             GL.UseProgram(Program);
+            ShaderManager.SetCurrentShader(this);
         }
 
         public void Dispose()

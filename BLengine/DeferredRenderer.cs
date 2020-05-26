@@ -7,6 +7,8 @@ using System.Windows;
 using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Graphics;
+using System.Diagnostics;
+using OpenTK;
 
 namespace RenderingEngine
 {
@@ -14,8 +16,7 @@ namespace RenderingEngine
     {
         
         static int TextureWidth = 2048;
-        static int TextureHeight = 2048;
-
+        static int TextureHeight = 2048;        
         static uint AlbedoRT;
         static uint NormalRT;
         static uint SpecularRT;
@@ -37,6 +38,11 @@ namespace RenderingEngine
         public static void Render()
         {
             BeginRenderToGBuffer();
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+
             GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 0.0f)); // clear to 0
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             viewport.Width = TextureWidth;
@@ -45,6 +51,22 @@ namespace RenderingEngine
             RenderToGBuffer();
             GL.Viewport(oldViewport);
             EndRenderToGBuffer();
+
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.CullFace);
+          //  GL.Enable(EnableCap.Blend);
+
+            BeginRenderToLightingBuffer();
+            
+            GL.ClearColor(new Color4(1.0f, 1.0f, 0.0f, 1.0f)); // clear to 0
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+            viewport.Width = TextureWidth;
+            viewport.Height = TextureHeight;
+            GL.Viewport(viewport);
+            RenderLighting();
+            GL.Viewport(oldViewport);
+
+            EndRenderToLightingBuffer();
        }
         public static void AddLightToRenderer(Light light)
         {
@@ -58,12 +80,15 @@ namespace RenderingEngine
         
         public static void RenderLighting()
         {
-            BeginRenderToLightingBuffer();
-            foreach(Light l in lights)
+         //   viewport.Width = TextureWidth;
+         //   viewport.Height = TextureHeight;
+         //   GL.Viewport(viewport);
+
+            foreach (Light l in lights)
             {
-            //    l.Render();
+                l.Render();
             }
-            EndRenderToLightingBuffer();
+          //  GL.Viewport(oldViewport);
         }
         
         public static void UpdateRenderViewport(int width, int height)
@@ -106,6 +131,8 @@ namespace RenderingEngine
             GL.BindTexture(TextureTarget.Texture2D, SpecularRT);
             GL.ActiveTexture(TextureUnit.Texture3);
             GL.BindTexture(TextureTarget.Texture2D, DepthRT);
+            GL.ActiveTexture(TextureUnit.Texture4);
+            GL.BindTexture(TextureTarget.Texture2D, LightingRT);
         }
 
         public static void UnbindGBufferTextures()
@@ -116,7 +143,7 @@ namespace RenderingEngine
 
         public static void BindLightingTexture()
         {
-            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture4);
             GL.BindTexture(TextureTarget.Texture2D, LightingRT);
         }
 
@@ -183,6 +210,8 @@ namespace RenderingEngine
             GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, internalDepthBuffer, 0);
             DrawBuffersEnum[] bufs = new DrawBuffersEnum[4] { (DrawBuffersEnum)FramebufferAttachment.ColorAttachment0, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment1, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment2, (DrawBuffersEnum)FramebufferAttachment.ColorAttachment3 };
             GL.DrawBuffers(4, bufs);
+
+            EndRenderToGBuffer();
 
             // Create the lighting buffer
             GL.GenTextures(1, out LightingRT);

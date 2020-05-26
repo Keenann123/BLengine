@@ -25,7 +25,7 @@ namespace RenderingEngine
         Texture tex;
         Texture tex2;
         Player player;
-        Light light = new Light(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
+        Light light;
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
 
@@ -42,8 +42,9 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            light = new Light(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
 
-            for(int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
@@ -181,14 +182,8 @@ namespace RenderingEngine
 
 
             player.GetCamera().ProcessInput();
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Lequal);
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
 
             DeferredRenderer.Render();
-            GL.Disable(EnableCap.CullFace);
-         //   DeferredRenderer.RenderLighting();
 
             DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
         // render debug mode
