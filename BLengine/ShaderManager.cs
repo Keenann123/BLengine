@@ -16,7 +16,7 @@ namespace RenderingEngine
         {
             Default,
             GBuffer,
-            Deferred_Directional,
+            DeferredDirectional,
             ImGui,
             DebugGBuffer,
             Deferred_Spot,

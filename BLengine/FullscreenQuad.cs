@@ -32,16 +32,16 @@ namespace RenderingEngine
         int VertexArrayObject;
         int ElementBufferObject;
 
-        public FullscreenQuad(ShaderType_BL type)
+        public FullscreenQuad(ShaderType_BL type, ShaderFlags flags)
         {
             VertexBufferObject = GL.GenBuffer();
             VertexArrayObject = GL.GenVertexArray();
             ElementBufferObject = GL.GenBuffer();
-            Initialise(type);
+            Initialise(type, flags);
         }
-        void Initialise(ShaderType_BL type)
+        void Initialise(ShaderType_BL type, ShaderFlags flags)
         {
-            shader = ShaderManager.get(type, ShaderFlags.NONE);
+            shader = ShaderManager.get(type, flags);
             GL.BindVertexArray(VertexArrayObject);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);

@@ -45,7 +45,7 @@ namespace RenderingEngine
             RenderToGBuffer();
             GL.Viewport(oldViewport);
             EndRenderToGBuffer();
-        }
+       }
         public static void AddLightToRenderer(Light light)
         {
             lights.Add(light);
@@ -55,16 +55,17 @@ namespace RenderingEngine
         {
             lights.Remove(light);
         }
+        
         public static void RenderLighting()
         {
             BeginRenderToLightingBuffer();
             foreach(Light l in lights)
             {
-                l.Render();
+            //    l.Render();
             }
             EndRenderToLightingBuffer();
         }
-
+        
         public static void UpdateRenderViewport(int width, int height)
         {
             oldViewport.Width = width;

@@ -25,7 +25,7 @@ namespace RenderingEngine
         Texture tex;
         Texture tex2;
         Player player;
-        LightDirectional light = new LightDirectional(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f));
+        Light light = new Light(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
 
@@ -51,7 +51,7 @@ namespace RenderingEngine
                     Meshes[i + j].SetTranslation(i * 10, j * 10, 0);
                 }
             }
-            Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer);
+            Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer, ShaderFlags.NONE);
 
             tex = new Texture("Textures/test.png");
             tex2 = new Texture("Textures/testnormal.png");
@@ -188,9 +188,7 @@ namespace RenderingEngine
 
             DeferredRenderer.Render();
             GL.Disable(EnableCap.CullFace);
-          //  DeferredRenderer.BeginRenderToLightingBuffer();
-          //  DeferredRenderer.RenderLighting();
-          //  DeferredRenderer.EndRenderToLightingBuffer();
+         //   DeferredRenderer.RenderLighting();
 
             DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
         // render debug mode

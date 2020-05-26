@@ -124,11 +124,9 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="CameraManager.cs" />
-    <Compile Include="Cube.cs" />
     <Compile Include="DeferredRenderer.cs" />
-    <Compile Include="EntityComponent.cs" />
-    <Compile Include="EntityManager.cs" />
     <Compile Include="ImGuiConsole.cs" />
+    <Compile Include="Light.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="FullscreenQuad.cs" />
     <Compile Include="MeshManager.cs" />
@@ -137,7 +135,6 @@
     <Compile Include="RenderingParameters.cs" />
     <Compile Include="ShaderManager.cs" />
     <Compile Include="Texture.cs" />
-    <Compile Include="Entity.cs" />
     <Compile Include="MeshComponent.cs" />
     <Compile Include="ImGuiController.cs" />
     <Compile Include="Program.cs" />
@@ -154,9 +151,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Meshes\sphere_lowres.obj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Meshes\teapot.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="OpenTK.dll.config" />
@@ -179,12 +173,22 @@
     <None Include="Shaders\default_imgui.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\directionallight.vert" />
-    <None Include="Shaders\directionallight.frag" />
+    <None Include="Shaders\DeferredDirectional.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\DeferredDirectional.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\GBuffer.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\GBuffer.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Lighting.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Lighting.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
