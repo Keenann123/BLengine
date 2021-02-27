@@ -18,7 +18,6 @@ void main()
 	vec4 specular = vec4(texture(GBufferSpecular, texCoord * 2).rgb, 1.0f);
 	vec4 lighting = vec4(texture(LightingBuffer, texCoord * 2).rgb, 1.0f);
 
-	vec4 pixelPosition = vec4(cameraPosition - (normalize(viewRay) * depth.r), 0.0f) * normal.a;
 	FragColour = normal + vec4(depth.r * 100, depth.r * 100, depth.r * 100, 1.0f) + diffuse + lighting;
 	//FragColour = vec4(texCoord.xy * 0.5, 0.0f, 1.0f);
 
@@ -26,8 +25,16 @@ void main()
 	FragColour = vec4(texture(GBufferDiffuse, texCoord).rgb, 1.0f);
 	#endif
 
-	#ifdef LIT
-	FragColour = vec4(texture(LightingBuffer, texcoord).rgb, 1.0f);
+	#ifdef DEBUG_NORMAL_ONLY
+	FragColour = vec4(texture(GBufferNormal, texCoord).rgb, 1.0f);
 	#endif
 
+	#ifdef DEBUG_SPECULAR_ONLY
+	FragColour = vec4(texture(GBufferSpecular, texCoord).rgb, 1.0f);
+	#endif
+
+	#ifdef DEBUG_DEPTH_ONLY
+	float d1 = texture(GBufferDepth, texCoord).r;
+	FragColour = vec4(d1*100f, d1*100f, d1*100f, 1.0f);
+	#endif
 }

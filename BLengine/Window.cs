@@ -26,9 +26,9 @@ namespace RenderingEngine
         Texture tex;
         Texture tex2;
         Player player;
-        Light light; 
+        Light light;
+        Light light2;
         static FullscreenQuad q;
-        static DeferredRenderer.RenderingMode RenderingMode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
 
@@ -45,19 +45,21 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            light = new Light(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
-            int num = 5;
+            light = new Light(new Vector3(-5f, -7.5f, -10f), new Vector3(0.5f, 0.75f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
+            light2 = new Light(new Vector3(5f, 7.5f, 10f), new Vector3(0.9f, 0.1f, 0.2f), Light.LightType.LIGHT_DIRECTIONAL);
+            int num = 8;
             for (int i = 0; i < num; i++)
             {
                 for (int j = 0; j < num; j++)
                 {
                     for (int k = 0; k < num; k++)
                     {
-                        Meshes[i + j] = new MeshComponent("Meshes/cube_1m.obj");
-                        Meshes[i + j].SetTranslation(i * 10, j * 10, k * 10);
-                    }
+                        Meshes[i + j] = new MeshComponent("Meshes/sphere_lowres.obj");
+                        Meshes[i + j].SetTranslation(i * 25, j * 25, k * 25);
+                    }   
                 }
             }
+            
             Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer, ShaderFlags.NONE);
 
             tex = new Texture("Textures/test.png");
@@ -90,7 +92,7 @@ namespace RenderingEngine
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4(0.1f, 0.07f, 0.13f, 1.0f)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.3f, 0.3f, 0.3f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
             #region Render Debug ImGUI
@@ -193,27 +195,70 @@ namespace RenderingEngine
             DeferredRenderer.Render(); 
             
 
-            if (keyboard.IsKeyDown(Key.G))
+            if (keyboard.IsKeyDown(Key.F1))
             {
-                RenderingMode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
+                DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_LIT;
+            } 
+
+            if (keyboard.IsKeyDown(Key.F2))
+            {
+                DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_NORMAL_ONLY;
             }
 
-           
-        // render debug mode
-            
-            if(RenderingMode == DeferredRenderer.RenderingMode.RENDER_DIFFUSE_ONLY)
+            if (keyboard.IsKeyDown(Key.F3))
+            {
+                DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_SPECULAR_ONLY;
+            }
+
+            if (keyboard.IsKeyDown(Key.F4))
+            {
+                DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEPTH_ONLY;
+            }
+
+            if (keyboard.IsKeyDown(Key.F5))
+            {
+                DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
+            }
+            // render debug mode
+
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_DIFFUSE_ONLY)
             {
                 DeferredRenderer.BindGBufferTextures();
                 Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.DEBUG_DIFFUSE_ONLY);
                 Q.Render();
             }
-            if (RenderingMode == DeferredRenderer.RenderingMode.RENDER_DEBUG)
+
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_NORMAL_ONLY)
             {
                 DeferredRenderer.BindGBufferTextures();
+                Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.DEBUG_NORMAL_ONLY);
                 Q.Render();
             }
+
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_SPECULAR_ONLY)
+            {
+                DeferredRenderer.BindGBufferTextures();
+                Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.DEBUG_SPECULAR_ONLY);
+                Q.Render();
+            }
+
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_DEPTH_ONLY)
+            {
+                DeferredRenderer.BindGBufferTextures();
+                Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.DEBUG_DEPTH_ONLY);
+                Q.Render();
+            }
+
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_DEBUG)
+            {
+                DeferredRenderer.BindGBufferTextures();
+                Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.NONE);
+                Q.Render();
+            }
+
+
             // render light texture 
-            if(RenderingMode == DeferredRenderer.RenderingMode.RENDER_LIT)
+            if(DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_LIT)
             {
                 DeferredRenderer.BindLightingTexture();
                 Q.shader = ShaderManager.get(ShaderType_BL.Lighting, ShaderFlags.LIT);

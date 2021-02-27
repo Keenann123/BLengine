@@ -6,7 +6,8 @@ uniform sampler2D GBufferDepth;
 uniform sampler2D LightingBuffer;
 
 uniform vec3 cameraPosition;
-
+uniform vec3 lightColour;
+uniform vec3 lightPosition;
 in vec3 viewRay;
 layout(location = 0) out vec4 FragColour;
 
@@ -19,7 +20,7 @@ void main()
 	vec4 specular = vec4(texture(GBufferSpecular, texCoord * 3).rgb, 1.0f);
 	vec4 lighting = vec4(texture(LightingBuffer, texCoord * 3).rgb, 1.0f);
 
-	vec4 pixelPosition = vec4(cameraPosition - (normalize(viewRay) * depth.r), 0.0f) * normal.a;
+	vec4 pixelPosition = vec4(cameraPosition - (normalize(viewRay) * depth.r), 0.0f) / 10.0f;
 	FragColour = normal + vec4(depth.r * 100, depth.r * 100, depth.r * 100, 1.0f) + diffuse + lighting;
 	//FragColour = vec4(texCoord.xy * 0.5, 0.0f, 1.0f);
 
@@ -29,8 +30,8 @@ void main()
 
 	#ifdef LIT
 		vec3 diff = texture(GBufferDiffuse, texCoord).rgb;
-		float light = dot(normal2.rgb, vec3(0.5f, 0.75f, 1.0f));
-		FragColour = vec4(vec3(light,light,light) * diff.rgb, 1.0f);
+		float light = dot(normal2.rgb, normalize(lightPosition));
+		FragColour = texture(LightingBuffer, texCoord) + vec4(vec3(light * lightColour.r * normal2.w, light * lightColour.g * normal2.w, light * lightColour.b * normal2.w), 1.0f);
 	#endif
 
 }

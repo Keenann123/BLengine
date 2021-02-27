@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace RenderingEngine
 {
-    class Light
+    public class Light
     {
         FullscreenQuad Q;
         Vector3 position;
@@ -36,10 +36,10 @@ namespace RenderingEngine
 
         public void Render()
         {
-            
+
             Q.shader.UseShader();
             Q.shader.BindVector3("lightColour", colour);
-            Q.shader.BindVector3("lightDirection", position);
+            Q.shader.BindVector3("lightPosition", position);
             Q.shader.BindVector3("cameraPosition", CameraManager.GetActiveCamera().Position);
             Q.Render();
         }

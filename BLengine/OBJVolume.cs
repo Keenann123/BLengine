@@ -86,7 +86,7 @@ namespace RenderingEngine
 
             //TextCoords, BROKEN ATM
             GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-            GL.BufferData(BufferTarget.ArrayBuffer, GetTextureCoords().Length * Vector2.SizeInBytes * 8, GetTextureCoords().ToArray(), BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, GetTextureCoords().Length * Vector2.SizeInBytes, GetTextureCoords().ToArray(), BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 0, 0); //Something's fucked up here I bet
         }

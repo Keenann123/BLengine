@@ -12,7 +12,7 @@ using OpenTK;
 
 namespace RenderingEngine
 {
-    class DeferredRenderer
+    public class DeferredRenderer
     {
         
         static int TextureWidth = 2048;
@@ -27,13 +27,17 @@ namespace RenderingEngine
         static uint LightingRT;
         static uint LightingFBOHandle;
         static List<Light> lights = new List<Light>();
-        public static RenderingMode mode;
-       
+        public static RenderingMode mode = RenderingMode.RENDER_DEBUG;
+
+        [Flags]
         public enum RenderingMode
         {
             RENDER_DEBUG = 1,
             RENDER_DIFFUSE_ONLY = 2,
-            RENDER_LIT = 4
+            RENDER_NORMAL_ONLY = 4,
+            RENDER_SPECULAR_ONLY = 8,
+            RENDER_DEPTH_ONLY = 16,
+            RENDER_LIT = 32
         }
 
         public static void Render()
@@ -59,7 +63,7 @@ namespace RenderingEngine
 
             BeginRenderToLightingBuffer();
          
-            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 1.0f)); // clear to 0
+            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 0.0f)); // clear to 0
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
             RenderLighting();
             EndRenderToLightingBuffer();

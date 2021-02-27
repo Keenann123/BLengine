@@ -99,6 +99,11 @@ namespace RenderingEngine
 
             }
 
+            if (keyboard.IsKeyDown(Key.Z))
+            {
+                //Change Render Mode
+            }
+
             m_prevMouse = mouse;
         }
 
