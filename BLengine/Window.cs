@@ -28,6 +28,7 @@ namespace RenderingEngine
         Player player;
         Light light;
         Light light2;
+        Light light3;
         static FullscreenQuad q;
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
@@ -45,8 +46,9 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            light = new Light(new Vector3(-5f, -7.5f, -10f), new Vector3(1.0f, 0.1f, 0.2f), 8.0f, Light.LightType.LIGHT_DIRECTIONAL);
-            light2 = new Light(new Vector3(5f, 7.5f, 10f), new Vector3(0.5f, 0.5f, 1.0f), 8.0f, Light.LightType.LIGHT_DIRECTIONAL);
+            light = new Light(new Vector3(-1f, -10f, 5f), new Vector3(1.0f, 0.0f, 0.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
+            light2 = new Light(new Vector3(5f, 10f, 5f), new Vector3(0.0f, 0.0f, 1.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
+            light3 = new Light(new Vector3(1f, -1f, 5f), new Vector3(0.0f, 1.0f, 0.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
             int num = 2;
             for (int i = 0; i < num; i++)
             {
@@ -94,6 +96,11 @@ namespace RenderingEngine
 
             GL.ClearColor(new Color4(0.3f, 0.3f, 0.3f, 1.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+            #region Render Editor UI
+            ImGui.Begin("Editor UI");
+            ImGui.SetWindowSize(new System.Numerics.Vector2(256, Window._Height));
+            ImGui.End();
+            #endregion
 
             #region Render Debug ImGUI
             ImGui.Begin("Render Debug");
