@@ -38,7 +38,8 @@ namespace RenderingEngine
             DEBUG_VIEWPOS = 32,
             DEBUG_VIEWDIRECTION = 64,
             DEBUG_WORLDPOSITION = 128,
-            LIT = 256
+            DEBUG_DIFFUSE_ONLY = 256,
+            LIT = 512
         };
 
 

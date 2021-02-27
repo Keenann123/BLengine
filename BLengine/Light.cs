@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL;
 
 namespace RenderingEngine
 {
@@ -22,8 +23,7 @@ namespace RenderingEngine
         }
         public Light(Vector3 pos, Vector3 col, LightType type)
         {
-            lightType = type;
-            if (lightType == LightType.LIGHT_DIRECTIONAL)
+            if (type == LightType.LIGHT_DIRECTIONAL)
             {
                 Q = new FullscreenQuad(ShaderManager.ShaderType_BL.DeferredDirectional, ShaderManager.ShaderFlags.LIT);
             }    
@@ -36,6 +36,7 @@ namespace RenderingEngine
 
         public void Render()
         {
+            
             Q.shader.UseShader();
             Q.shader.BindVector3("lightColour", colour);
             Q.shader.BindVector3("lightDirection", position);

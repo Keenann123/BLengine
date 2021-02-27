@@ -15,8 +15,8 @@ namespace RenderingEngine
     class DeferredRenderer
     {
         
-        static int TextureWidth = 4096;
-        static int TextureHeight = 4096;        
+        static int TextureWidth = 2048;
+        static int TextureHeight = 2048;        
         static uint AlbedoRT;
         static uint NormalRT;
         static uint SpecularRT;
@@ -28,7 +28,7 @@ namespace RenderingEngine
         static uint LightingFBOHandle;
         static List<Light> lights = new List<Light>();
         public static RenderingMode mode;
-
+       
         public enum RenderingMode
         {
             RENDER_DEBUG = 1,
@@ -55,15 +55,13 @@ namespace RenderingEngine
 
             GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.CullFace);
-          //  GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.Blend);
 
             BeginRenderToLightingBuffer();
-            
-            GL.ClearColor(new Color4(1.0f, 1.0f, 0.0f, 1.0f)); // clear to 0
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
-
+         
+            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 1.0f)); // clear to 0
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
             RenderLighting();
-
             EndRenderToLightingBuffer();
        }
         public static void AddLightToRenderer(Light light)

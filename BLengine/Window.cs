@@ -9,6 +9,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 using static RenderingEngine.ShaderManager;
+using OpenTK.Input;
 
 namespace RenderingEngine
 {
@@ -25,7 +26,9 @@ namespace RenderingEngine
         Texture tex;
         Texture tex2;
         Player player;
-        Light light;
+        Light light; 
+        static FullscreenQuad q;
+        static DeferredRenderer.RenderingMode RenderingMode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
 
@@ -43,13 +46,16 @@ namespace RenderingEngine
         {
             base.OnLoad(e);
             light = new Light(new Vector3(0, 1, 1), new Vector3(0.5f, 0.5f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
-
-            for (int i = 0; i < 8; i++)
+            int num = 5;
+            for (int i = 0; i < num; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < num; j++)
                 {
-                    Meshes[i + j] = new MeshComponent("Meshes/cube_1m.obj");
-                    Meshes[i + j].SetTranslation(i * 10, j * 10, 0);
+                    for (int k = 0; k < num; k++)
+                    {
+                        Meshes[i + j] = new MeshComponent("Meshes/cube_1m.obj");
+                        Meshes[i + j].SetTranslation(i * 10, j * 10, k * 10);
+                    }
                 }
             }
             Q = new FullscreenQuad(ShaderType_BL.DebugGBuffer, ShaderFlags.NONE);
@@ -60,7 +66,9 @@ namespace RenderingEngine
             _controller.CreateSkin();
             player = new Player();
             DeferredRenderer.SetupGBuffer();
+            q = new FullscreenQuad(ShaderManager.ShaderType_BL.Default, ShaderManager.ShaderFlags.NONE);
         }
+
 
         protected override void OnResize(EventArgs e)
         {
@@ -79,10 +87,6 @@ namespace RenderingEngine
             fps = 1.0 / e.Time;
             base.Title = "Legend286 and Boomer678's Rendering Engine" + ": OpenGL Version: " + GL.GetString(StringName.Version) + ": frametime: " + (int)fps;
             base.OnRenderFrame(e);
-          //  mesh1.mat.DiffuseColour = new Vector3((float)Math.Sin(Util.TotalTime), (float)Math.Cos(Util.TotalTime), 0.5f);
-        //    mesh1.SetTranslation((float)Math.Sin(Util.TotalTime) * 3, (float)Math.Cos(Util.TotalTime) * 3, (float)Math.Sin(Util.TotalTime) * 2);
-        //    mesh1.SetScale(100.0f);
-        //    mesh1.SetRotation(0, 0, Util.TotalTime * 10);
 
             _controller.Update(this, (float)e.Time);
 
@@ -101,47 +105,47 @@ namespace RenderingEngine
             if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE;
+                    Meshes[0].mat.flags = ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.USE_DIFFUSE_TEXTURE;
+                    Meshes[0].mat.flags = ShaderFlags.USE_DIFFUSE_TEXTURE;
             }
             if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
+                    Meshes[0].mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE;
+                    Meshes[0].mat.flags = ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE;
             }
             if (ImGui.Button("Change Shader DEBUG_WORLDPOSITION", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.DEBUG_WORLDPOSITION;
+                    Meshes[0].mat.flags = ShaderFlags.DEBUG_WORLDPOSITION;
             }
             if (ImGui.Button("Change Shader DEBUG_VIEWPOS", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.DEBUG_VIEWPOS;
+                    Meshes[0].mat.flags = ShaderFlags.DEBUG_VIEWPOS;
             }
             if (ImGui.Button("Change Shader DEBUG_VIEWDIRECTION", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.DEBUG_VIEWDIRECTION;
+                    Meshes[0].mat.flags = ShaderFlags.DEBUG_VIEWDIRECTION;
             }
             if (ImGui.Button("Change Shader DEBUG_FOG", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = ShaderFlags.DEBUG_FOG;
+                    Meshes[0].mat.flags = ShaderFlags.DEBUG_FOG;
             }
             if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
             {
                 foreach (var mesh in MeshManager.Meshes)
-                    mesh.mat.flags = 0;
+                    Meshes[0].mat.flags = 0;
             }
             ImGui.SliderFloat("Fog End Distance", ref RenderingParameters.FogEndDistance, 10.0f, 10000.0f);
 
@@ -160,17 +164,17 @@ namespace RenderingEngine
             {
                 foreach(var mesh in MeshManager.Meshes)
                 {
-                    Shader shader = new Shader(mesh.mat.shader.SourceCode_frag, mesh.mat.shader.SourceCode_vert);
+                    Shader shader = new Shader(Meshes[0].mat.shader.SourceCode_frag, Meshes[0].mat.shader.SourceCode_vert);
                     ShaderManager.put(ShaderType_BL.GBuffer, mesh.mat.flags, shader);
                 }
             
             }
             if (ImGui.CollapsingHeader("Fragment")){
-                ImGui.InputTextMultiline("Fragment Shader", ref mesh2.mat.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(800, 600));
+                ImGui.InputTextMultiline("Fragment Shader", ref Meshes[0].mat.shader.SourceCode_frag, 4096, new System.Numerics.Vector2(800, 600));
             }
             if (ImGui.CollapsingHeader("Vertex"))
             {
-                ImGui.InputTextMultiline("Vertex Shader", ref mesh2.mat.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(800, 600));
+                ImGui.InputTextMultiline("Vertex Shader", ref Meshes[0].mat.shader.SourceCode_vert, 4096, new System.Numerics.Vector2(800, 600));
             }
           
            
@@ -183,27 +187,46 @@ namespace RenderingEngine
 
             player.GetCamera().ProcessInput();
 
-            DeferredRenderer.Render();
+            
+            var mouse = Mouse.GetState();
+            var keyboard = Keyboard.GetState();
+            DeferredRenderer.Render(); 
+            
 
-            DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
+            if (keyboard.IsKeyDown(Key.G))
+            {
+                RenderingMode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
+            }
+
+           
         // render debug mode
-            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_DEBUG)
+            
+            if(RenderingMode == DeferredRenderer.RenderingMode.RENDER_DIFFUSE_ONLY)
+            {
+                DeferredRenderer.BindGBufferTextures();
+                Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.DEBUG_DIFFUSE_ONLY);
+                Q.Render();
+            }
+            if (RenderingMode == DeferredRenderer.RenderingMode.RENDER_DEBUG)
             {
                 DeferredRenderer.BindGBufferTextures();
                 Q.Render();
             }
             // render light texture 
-            if(DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_LIT)
+            if(RenderingMode == DeferredRenderer.RenderingMode.RENDER_LIT)
             {
                 DeferredRenderer.BindLightingTexture();
                 Q.shader = ShaderManager.get(ShaderType_BL.Lighting, ShaderFlags.LIT);
                 Q.Render();
             }
 
-          //  DeferredRenderer.UnbindGBufferTextures();
+            
+
+            DeferredRenderer.UnbindGBufferTextures();
             _controller.Render();
             
             Util.CheckGLError("End of frame");
+            q.Render();
 
             SwapBuffers();
         }

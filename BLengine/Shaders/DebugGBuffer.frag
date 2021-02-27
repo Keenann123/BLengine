@@ -22,6 +22,12 @@ void main()
 	FragColour = normal + vec4(depth.r * 100, depth.r * 100, depth.r * 100, 1.0f) + diffuse + lighting;
 	//FragColour = vec4(texCoord.xy * 0.5, 0.0f, 1.0f);
 
-	
+	#ifdef DEBUG_DIFFUSE_ONLY
+	FragColour = vec4(texture(GBufferDiffuse, texCoord).rgb, 1.0f);
+	#endif
+
+	#ifdef LIT
+	FragColour = vec4(texture(LightingBuffer, texcoord).rgb, 1.0f);
+	#endif
 
 }
