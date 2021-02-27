@@ -29,7 +29,7 @@ void main()
 	#ifdef LIT
 		vec3 diff = texture(GBufferDiffuse, texCoord).rgb;
 		float light = clamp(dot(normal2.rgb, normalize(lightPosition)), 0.0f, 1.0f) * lightIntensity;
-		FragColour = texture(LightingBuffer, texCoord) + vec4(vec3(light * lightColour.r * normal2.w, light * lightColour.g * normal2.w, light * lightColour.b * normal2.w), 1.0f);
+		FragColour = texture(LightingBuffer, texCoord) + vec4(vec3(light * lightColour.rgb * normal2.w * texture(GBufferDiffuse, texCoord).rgb), 1.0f);
 	#endif
 
 }

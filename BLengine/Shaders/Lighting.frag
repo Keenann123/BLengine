@@ -8,6 +8,6 @@ void main()
 { 
 	vec4 output;
 	
-	output = texture(LightingBuffer, texCoord) * texture(GBufferDiffuse, texCoord);
+	output = texture(LightingBuffer, texCoord);// * texture(GBufferDiffuse, texCoord);
 	FragColour = output;
 }

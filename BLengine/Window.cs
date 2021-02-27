@@ -45,8 +45,8 @@ namespace RenderingEngine
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            light = new Light(new Vector3(-5f, -7.5f, -10f), new Vector3(1.0f, 1.0f, 1.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
-            light2 = new Light(new Vector3(5f, 7.5f, 10f), new Vector3(1.0f, 1.0f, 1.0f), 0.25f, Light.LightType.LIGHT_DIRECTIONAL);
+            light = new Light(new Vector3(-5f, -7.5f, -10f), new Vector3(1.0f, 0.1f, 0.2f), 8.0f, Light.LightType.LIGHT_DIRECTIONAL);
+            light2 = new Light(new Vector3(5f, 7.5f, 10f), new Vector3(0.5f, 0.5f, 1.0f), 8.0f, Light.LightType.LIGHT_DIRECTIONAL);
             int num = 2;
             for (int i = 0; i < num; i++)
             {
