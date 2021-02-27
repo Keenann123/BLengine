@@ -47,7 +47,7 @@ namespace RenderingEngine
             base.OnLoad(e);
             light = new Light(new Vector3(-5f, -7.5f, -10f), new Vector3(0.5f, 0.75f, 1.0f), Light.LightType.LIGHT_DIRECTIONAL);
             light2 = new Light(new Vector3(5f, 7.5f, 10f), new Vector3(0.9f, 0.1f, 0.2f), Light.LightType.LIGHT_DIRECTIONAL);
-            int num = 8;
+            int num = 2;
             for (int i = 0; i < num; i++)
             {
                 for (int j = 0; j < num; j++)

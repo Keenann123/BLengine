@@ -125,6 +125,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CameraManager.cs" />
     <Compile Include="DeferredRenderer.cs" />
+    <Compile Include="Frustum.cs" />
     <Compile Include="ImGuiConsole.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Material.cs" />
