@@ -15,8 +15,8 @@ namespace RenderingEngine
     class DeferredRenderer
     {
         
-        static int TextureWidth = 2048;
-        static int TextureHeight = 2048;        
+        static int TextureWidth = 4096;
+        static int TextureHeight = 4096;        
         static uint AlbedoRT;
         static uint NormalRT;
         static uint SpecularRT;
@@ -28,6 +28,7 @@ namespace RenderingEngine
         static uint LightingFBOHandle;
         static List<Light> lights = new List<Light>();
         public static RenderingMode mode;
+
         public enum RenderingMode
         {
             RENDER_DEBUG = 1,

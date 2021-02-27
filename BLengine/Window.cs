@@ -160,7 +160,7 @@ namespace RenderingEngine
             {
                 foreach(var mesh in MeshManager.Meshes)
                 {
-                    Shader shader = new Shader(mesh2.mat.shader.SourceCode_frag, mesh2.mat.shader.SourceCode_vert);
+                    Shader shader = new Shader(mesh.mat.shader.SourceCode_frag, mesh.mat.shader.SourceCode_vert);
                     ShaderManager.put(ShaderType_BL.GBuffer, mesh.mat.flags, shader);
                 }
             
