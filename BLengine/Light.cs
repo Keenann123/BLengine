@@ -5,14 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
+using SixLabors.ImageSharp.Processing;
 
 namespace RenderingEngine
 {
     public class Light
     {
         FullscreenQuad Q;
-        Vector3 position;
-        Vector3 colour;
+        Vector3 lightPosition;
+        Vector3 lightColour;
+        float lightIntensity;
         LightType lightType;
         public enum LightType
         {
@@ -21,15 +23,18 @@ namespace RenderingEngine
             LIGHT_SPOT = 2,
             LIGHT_AREA = 4
         }
-        public Light(Vector3 pos, Vector3 col, LightType type)
+        public Light(Vector3 pos, Vector3 col, float intensity, LightType type)
         {
-            if (type == LightType.LIGHT_DIRECTIONAL)
+            lightType = type;
+            if (lightType == LightType.LIGHT_DIRECTIONAL)
             {
                 Q = new FullscreenQuad(ShaderManager.ShaderType_BL.DeferredDirectional, ShaderManager.ShaderFlags.LIT);
             }    
 
-            position = pos;
-            colour = col;
+            lightPosition = pos;
+            lightColour = col;
+            lightIntensity = intensity;
+
 
             DeferredRenderer.AddLightToRenderer(this);
         }
@@ -38,8 +43,9 @@ namespace RenderingEngine
         {
 
             Q.shader.UseShader();
-            Q.shader.BindVector3("lightColour", colour);
-            Q.shader.BindVector3("lightPosition", position);
+            Q.shader.BindVector3("lightColour", lightColour);
+            Q.shader.BindVector3("lightPosition", lightPosition);
+            Q.shader.BindFloat("lightIntensity", lightIntensity);
             Q.shader.BindVector3("cameraPosition", CameraManager.GetActiveCamera().Position);
             Q.Render();
         }
