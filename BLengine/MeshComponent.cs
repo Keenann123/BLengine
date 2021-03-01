@@ -7,11 +7,22 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using static RenderingEngine.ShaderManager;
+using BepuPhysics.Collidables;
+using System.Linq.Expressions;
 
 namespace RenderingEngine
 {
     class MeshComponent
     {
+        [Flags]
+        public enum MovementMode
+        {
+             MOVEMENT_STATIC = 1,
+             MOVEMENT_KINEMATIC = 2,
+             MOVEMENT_STATIONARY = 4,
+             MOVEMENT_DYNAMIC = 8
+        }
+
         Matrix4 ModelMatrix;
         Vector3 Translation = new Vector3(0.0f, 0.0f, 0.0f);
         Vector3 Rotation = new Vector3(0.0f, 0.0f, 0.0f);
@@ -19,8 +30,8 @@ namespace RenderingEngine
         ObjVolume vol;
 
         public Material mat;
-
         public bool shaderChanged = false;
+        public MovementMode movementMode = MovementMode.MOVEMENT_STATIC;
 
         public MeshComponent(string filename)
         {
@@ -36,10 +47,12 @@ namespace RenderingEngine
             mat.RenderMaterial();
             mat.SetShader(type);
             mat.UpdateWorldTransformMatrix(GetModelMatrix());
-            mat.shader.BindMatrix4("view", CameraManager.GetActiveCamera().GetViewMatrix());
-            mat.shader.BindMatrix4("projection", CameraManager.GetActiveCamera().GetProjectionMatrix());
+            mat.shader.BindMatrix4("viewProjection", CameraManager.GetActiveCamera().GetViewProjectionMatrix());
+  //        mat.shader.BindMatrix4("projection", CameraManager.GetActiveCamera().GetProjectionMatrix());
             mat.shader.BindVector3("viewPos", CameraManager.GetActiveCamera().Position);
             mat.shader.BindFloat("FogEndDistance", RenderingParameters.FogEndDistance);
+            mat.shader.BindFloat("roughness", 0.1f);
+            mat.shader.BindFloat("metallic", 0.0f);
             
             vol.Render();
         }
