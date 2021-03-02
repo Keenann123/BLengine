@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace RenderingEngine
 {
-    class BoundingVolume
+    public class BoundingVolume
     {
         public float X, Y, Z, Width, Height, Length;
 
-        BoundingVolume(float x, float y, float z, float length, float width, float height)
+        public BoundingVolume(float x, float y, float z, float length, float width, float height)
         {
             X = x;
             Y = y;
@@ -22,7 +22,7 @@ namespace RenderingEngine
 
         }
 
-        BoundingVolume(Vector3 position, Vector3 bounds)
+        public BoundingVolume(Vector3 position, Vector3 bounds)
         {
             X = position.X;
             Y = position.Y;
