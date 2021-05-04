@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>RenderingEngine</RootNamespace>
     <AssemblyName>RenderingEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -30,6 +30,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -83,12 +84,6 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BepuPhysics, Version=2.3.0.0, Culture=neutral, PublicKeyToken=9345ce38ee48a1cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\BepuPhysics.2.3.0\lib\netstandard2.0\BepuPhysics.dll</HintPath>
-    </Reference>
-    <Reference Include="BepuUtilities, Version=2.3.0.0, Culture=neutral, PublicKeyToken=a595ef937c270ac9, processorArchitecture=MSIL">
-      <HintPath>..\packages\BepuUtilities.2.3.0\lib\netstandard2.0\BepuUtilities.dll</HintPath>
-    </Reference>
     <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
     </Reference>
@@ -107,8 +102,8 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.1\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -128,11 +123,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoundingVolume.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="CameraManager.cs" />
     <Compile Include="DeferredRenderer.cs" />
-    <Compile Include="Frustum.cs" />
     <Compile Include="ImGuiConsole.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Material.cs" />
@@ -141,6 +134,7 @@
     <Compile Include="OBJVolume.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="RenderingParameters.cs" />
+    <Compile Include="ShaderEditor.cs" />
     <Compile Include="ShaderManager.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="MeshComponent.cs" />
@@ -161,7 +155,6 @@
     <None Include="Meshes\sphere_lowres.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Meshes\stanford_bunny.obj" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Shaders\DebugGBuffer.vert">
@@ -182,10 +175,10 @@
     <None Include="Shaders\default_imgui.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\DeferredLight.frag">
+    <None Include="Shaders\DeferredDirectional.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\DeferredLight.vert">
+    <None Include="Shaders\DeferredDirectional.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\GBuffer.frag">

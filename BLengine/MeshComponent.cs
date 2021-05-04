@@ -7,7 +7,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using static RenderingEngine.ShaderManager;
-using BepuPhysics.Collidables;
 using System.Linq.Expressions;
 
 namespace RenderingEngine
