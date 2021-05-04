@@ -19,15 +19,12 @@ namespace RenderingEngine
             GBuffer,
             ImGui,
             DebugGBuffer,
-            DeferredDirectional,
-            DeferredSpot,
-            DeferredPoint,
-            DeferredArea,
+            DeferredLight,
             Lighting
         };
 
         [Flags]
-        public enum ShaderFlags
+        public enum ShaderFlags : long
         {
             NONE = 0,
             DEBUG_LIGHTING = 1,
@@ -37,12 +34,16 @@ namespace RenderingEngine
             DEBUG_FOG = 16,
             DEBUG_VIEWPOS = 32,
             DEBUG_VIEWDIRECTION = 64,
-            DEBUG_WORLDPOSITION = 128,
-            DEBUG_DIFFUSE_ONLY = 256,
-            DEBUG_NORMAL_ONLY = 512,
-            DEBUG_SPECULAR_ONLY = 1024,
-            DEBUG_DEPTH_ONLY = 2048,
-            LIT = 4096
+            DEBUG_DIFFUSE_ONLY = 128,
+            DEBUG_NORMAL_ONLY = 256,
+            DEBUG_SPECULAR_ONLY = 512,
+            DEBUG_DEPTH_ONLY = 1024,
+            DEBUG_WORLD_POSITION = 2048,
+            LIT = 4096,
+            LIGHT_DIRECTIONAL = 8192,
+            LIGHT_POINT = 16384,
+            LIGHT_SPOT = 32768,
+            LIGHT_AREA = 65536
         };
 
 

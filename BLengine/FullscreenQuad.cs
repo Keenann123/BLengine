@@ -61,7 +61,12 @@ namespace RenderingEngine
             shader.BindInt("GBufferNormal", 1);
             shader.BindInt("GBufferSpecular", 2);
             shader.BindInt("GBufferDepth", 3);
-            shader.BindInt("LightingBuffer", 4);
+            shader.BindInt("GBufferPosition", 4);
+            shader.BindInt("LightingBuffer", 5);
+
+            shader.BindMatrix4("view",CameraManager.GetActiveCamera().GetViewMatrix());
+            shader.BindMatrix4("projection", CameraManager.GetActiveCamera().GetProjectionMatrix());
+
             DeferredRenderer.BindGBufferTextures();
             GL.BindVertexArray(VertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);

@@ -14,14 +14,14 @@ namespace RenderingEngine
         Matrix4 ViewMatrix;
         public Vector3 Position;
         Vector3 LookTarget;
-        Vector3 Direction;
+        public Vector3 Direction;
 
 
         protected const float m_pitchLimit = 1.8f;
         protected const float m_speed = 0.125f;
         protected const float m_mouseSpeedX = 0.0035f;
         protected const float m_mouseSpeedY = 0.0035f;
-        protected Vector3 m_up = Vector3.UnitZ;
+        public Vector3 m_up = Vector3.UnitZ;
 
         public Camera()
         {
@@ -31,7 +31,7 @@ namespace RenderingEngine
 
             Direction = Vector3.Normalize(Position - LookTarget);
 
-            ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1280f / 720f, 1f, 10000); //fix aspect for resize
+            ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 1280f / 720f, 1f, 10000f); //fix aspect for resize
             ViewMatrix = CreateLookAt();
             CameraManager.AddCamera(this);
             CameraManager.SetActiveCamera(this);
@@ -126,6 +126,26 @@ namespace RenderingEngine
         public Matrix4 GetViewMatrix()
         {
             return ViewMatrix;
+        }
+
+        public Matrix4 GetViewProjectionMatrix()
+        {
+            return ViewMatrix * ProjectionMatrix;
+        }
+
+        public Matrix4 GetViewProjectionInverseMatrix()
+        {
+            return Matrix4.Invert(GetViewProjectionMatrix());
+        }
+
+        public Matrix4 GetViewInverseMatrix()
+        {
+            return Matrix4.Invert(GetViewMatrix());
+        }
+
+        public Matrix4 GetProjectionInverseMatrix()
+        {
+            return Matrix4.Invert(GetProjectionMatrix());
         }
     }
 }

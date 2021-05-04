@@ -88,7 +88,7 @@ namespace RenderingEngine
             GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
             GL.BufferData(BufferTarget.ArrayBuffer, GetTextureCoords().Length * Vector2.SizeInBytes, GetTextureCoords().ToArray(), BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 0, 0); //Something's fucked up here I bet
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 0, 0); //yucky yucky something's fucky
         }
 
         public void Render()

@@ -16,10 +16,8 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
-        public static int _Width = 1280;
-        public static int _Height = 720;
-        MeshComponent mesh1;
-        MeshComponent mesh2;
+        public static int _Width = 1920;
+        public static int _Height = 1080;
         public static double fps;
         MeshComponent[] Meshes = new MeshComponent[10000];
         FullscreenQuad Q;
@@ -29,6 +27,11 @@ namespace RenderingEngine
         Light light;
         Light light2;
         Light light3;
+        System.Numerics.Vector3 lightColour1 = new System.Numerics.Vector3(1.0f, 0.0f, 0.0f);
+        System.Numerics.Vector3 lightColour2 = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+        System.Numerics.Vector3 lightColour3 = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+        float light1Intensity = 1.0f, light2Intensity = 1.0f, light3Intensity = 1.0f;
+        float lightRadius = 1000.0f;
         static FullscreenQuad q;
 
         List<MeshComponent> meshEntries = new List<MeshComponent>();
@@ -45,11 +48,12 @@ namespace RenderingEngine
 
         protected override void OnLoad(EventArgs e)
         {
+            GL.DepthRange(0.0f, 1.0f);
             base.OnLoad(e);
-            light = new Light(new Vector3(-1f, -10f, 5f), new Vector3(1.0f, 0.0f, 0.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
-            light2 = new Light(new Vector3(5f, 10f, 5f), new Vector3(0.0f, 0.0f, 1.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
-            light3 = new Light(new Vector3(1f, -1f, 5f), new Vector3(0.0f, 1.0f, 0.0f), 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
-            int num = 2;
+            light = new Light(new Vector3(-1f, -1f, -1f), new Vector3(lightColour1.X, lightColour1.Y, lightColour1.Z), light1Intensity, lightRadius, Light.LightType.LIGHT_POINT);
+            light2 = new Light(new Vector3(5f, 10f, 5f), new Vector3(lightColour2.X, lightColour2.Y, lightColour2.Z), light2Intensity, 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
+            light3 = new Light(new Vector3(1f, -1f, 5f), new Vector3(lightColour3.X, lightColour3.Y, lightColour3.Z), light3Intensity, 1.0f, Light.LightType.LIGHT_DIRECTIONAL);
+            int num = 6;
             for (int i = 0; i < num; i++)
             {
                 for (int j = 0; j < num; j++)
@@ -94,68 +98,41 @@ namespace RenderingEngine
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4(0.3f, 0.3f, 0.3f, 1.0f)); //pretty colors :^)
+            GL.ClearColor(new Color4(0.0f, 0.0f, 0.0f, 0.0f)); //pretty colors :^)
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
             #region Render Editor UI
+            ImGui.SetNextWindowPos(new System.Numerics.Vector2(0.0f, 0.0f));
             ImGui.Begin("Editor UI");
-            ImGui.SetWindowSize(new System.Numerics.Vector2(256, Window._Height));
+            ImGui.SetWindowSize(new System.Numerics.Vector2(380, Window._Height));
+            
+            ImGui.ColorEdit3("Light 1 Colour", ref lightColour1);
+            ImGui.DragFloat("Light 1 Intensity", ref light1Intensity);
+            ImGui.DragFloat("Light 1 Radius", ref lightRadius);
+            ImGui.ColorEdit3("Light 2 Colour", ref lightColour2);
+            ImGui.DragFloat("Light 2 Intensity", ref light2Intensity);
+            ImGui.ColorEdit3("Light 3 Colour", ref lightColour3);
+            ImGui.DragFloat("Light 3 Intensity", ref light3Intensity);
+
             ImGui.End();
             #endregion
 
+            // move this to editorlayer or something :)
+            light.setColour(lightColour1);
+            light2.setColour(lightColour2);
+            light3.setColour(lightColour3);
+            light.setIntensity(light1Intensity);
+            light2.setIntensity(light2Intensity);
+            light3.setIntensity(light3Intensity);
+            light.setRadius(lightRadius);
+            bool isOpenMenu = true;
             #region Render Debug ImGUI
-            ImGui.Begin("Render Debug");
+            ImGui.SetNextWindowPos(new System.Numerics.Vector2(Width - 450, 0.0f));
+            ImGui.Begin("Render Debug", ref isOpenMenu, ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.None);
             ImGui.SetWindowSize(new System.Numerics.Vector2(450, 365), ImGuiCond.Once);
             ImGui.Text("Shaders: " + ShaderManager.GetShaderCount());
 
             ImGui.Text("Camera Pos: " + player.GetCamera().Position);
-            
-
-
-            if (ImGui.Button("Change Shader LIT", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.LIT | ShaderFlags.USE_DIFFUSE_TEXTURE | ShaderFlags.USE_NORMAL_TEXTURE;
-            }
-            if (ImGui.Button("Change Shader DIFFUSE", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.USE_DIFFUSE_TEXTURE;
-            }
-            if (ImGui.Button("Change Shader NORMAL", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.USE_NORMAL_TEXTURE;
-            }
-            if (ImGui.Button("Change shader DEBUG_LIGHTING", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.DEBUG_LIGHTING | ShaderFlags.USE_NORMAL_TEXTURE;
-            }
-            if (ImGui.Button("Change Shader DEBUG_WORLDPOSITION", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.DEBUG_WORLDPOSITION;
-            }
-            if (ImGui.Button("Change Shader DEBUG_VIEWPOS", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.DEBUG_VIEWPOS;
-            }
-            if (ImGui.Button("Change Shader DEBUG_VIEWDIRECTION", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.DEBUG_VIEWDIRECTION;
-            }
-            if (ImGui.Button("Change Shader DEBUG_FOG", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = ShaderFlags.DEBUG_FOG;
-            }
-            if (ImGui.Button("Change Shader USE_NONE", new System.Numerics.Vector2(400, 32)))
-            {
-                foreach (var mesh in MeshManager.Meshes)
-                    Meshes[0].mat.flags = 0;
-            }
+           
             ImGui.SliderFloat("Fog End Distance", ref RenderingParameters.FogEndDistance, 10.0f, 10000.0f);
 
             if (ImGui.Button("Quit", new System.Numerics.Vector2(100, 32)))
@@ -173,7 +150,7 @@ namespace RenderingEngine
             {
                 foreach(var mesh in MeshManager.Meshes)
                 {
-                    Shader shader = new Shader(Meshes[0].mat.shader.SourceCode_frag, Meshes[0].mat.shader.SourceCode_vert);
+                    Shader shader = new Shader(mesh.mat.shader.SourceCode_frag, mesh.mat.shader.SourceCode_vert);
                     ShaderManager.put(ShaderType_BL.GBuffer, mesh.mat.flags, shader);
                 }
             
@@ -224,6 +201,11 @@ namespace RenderingEngine
 
             if (keyboard.IsKeyDown(Key.F5))
             {
+                DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_WORLD_POSITION_ONLY;
+            }
+
+            if (keyboard.IsKeyDown(Key.F6))
+            {
                 DeferredRenderer.mode = DeferredRenderer.RenderingMode.RENDER_DEBUG;
             }
             // render debug mode
@@ -256,12 +238,22 @@ namespace RenderingEngine
                 Q.Render();
             }
 
+
+            if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_WORLD_POSITION_ONLY)
+            {
+                DeferredRenderer.BindGBufferTextures();
+                Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.DEBUG_WORLD_POSITION);
+                Q.Render();
+            }
+
             if (DeferredRenderer.mode == DeferredRenderer.RenderingMode.RENDER_DEBUG)
             {
                 DeferredRenderer.BindGBufferTextures();
                 Q.shader = ShaderManager.get(ShaderType_BL.DebugGBuffer, ShaderFlags.NONE);
                 Q.Render();
             }
+
+
 
 
             // render light texture 

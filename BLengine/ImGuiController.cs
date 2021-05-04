@@ -129,6 +129,11 @@ namespace RenderingEngine
 
         }
 
+        void setShaderFlags(ShaderManager.ShaderFlags flags)
+        {
+            _shader = ShaderManager.get(ShaderManager.ShaderType_BL.ImGui, flags);
+        }
+
         public void CreateDeviceResources()
         {
             Util.CreateVertexArray("ImGui", out _vertexArray);
