@@ -32,11 +32,11 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
     float a2     = a*a;
     float NdotH  = max(dot(N, H), 0.0);
     float NdotH2 = NdotH*NdotH;
-	
+
     float num   = a2;
     float denom = (NdotH2 * (a2 - 1.0) + 1.0);
     denom = PI * denom * denom;
-	
+
     return num / denom;
 }
 
@@ -47,7 +47,7 @@ float GeometrySchlickGGX(float NdotV, float roughness)
 
     float num   = NdotV;
     float denom = NdotV * (1.0 - k) + k;
-	
+
     return num / denom;
 }
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
@@ -56,7 +56,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     float NdotL = max(dot(N, L), 0.0);
     float ggx2  = GeometrySchlickGGX(NdotV, roughness);
     float ggx1  = GeometrySchlickGGX(NdotL, roughness);
-	
+
     return ggx1 * ggx2;
 }
 
@@ -70,12 +70,12 @@ void main()
 	vec3 N = vec3(texture(GBufferNormal, texCoord).rgb * 2.0f - 1.0f);
     float mask = texture(GBufferNormal, texCoord).w;
 	vec3 V = normalize(cameraPosition - wpos());
-    
+
     float distance = 1.0f;
 
 	vec3 F0 = vec3(0.04); 
     F0 = mix(F0, albedo, metallic);
-	           
+
     // reflectance equation
     vec3 Lo = vec3(0.0);
 
@@ -84,29 +84,29 @@ void main()
         vec3 L = normalize(lightPosition - wpos());
         vec3 H = normalize(V + L);
 
-        	    
+
         #ifdef LIGHT_DIRECTIONAL
             L = lightPosition;
         #endif 
-        
+
         vec3 radiance;
-        
+
         // cook-torrance brdf
         float NDF = DistributionGGX(N.rgb, H, roughness);        
         float G   = GeometrySmith(N.rgb, V, L, roughness);      
         vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);       
-        
+
         vec3 kS = F;
         vec3 kD = vec3(1.0) - kS;
         kD *= 1.0 - metallic;	  
-        
+
 
         vec3 numerator    = NDF * G * F;
         float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
         vec3 specular     = numerator / max(denominator, 0.001);  
-            
+
         float NdotL = max(dot(N.rgb, L), 0.0);       
-        
+
 		#ifdef LIGHT_DIRECTIONAL
             radiance = lightColour * lightIntensity;        
             Lo += (kD * albedo / PI + specular) * radiance * NdotL; 
@@ -121,7 +121,7 @@ void main()
 			float light = clamp(dot(N.rgb, normalize(L)), 0.0f, 1.0f) * lightIntensity;
 			FragColour = vec4(texture(LightingBuffer, texCoord).rgb + (Lo * mask), 1.0f);// * texture(GBufferDiffuse, texCoord).rgb), 1.0f);
 		#endif
-	
+
 	#endif
 
-}
+} 

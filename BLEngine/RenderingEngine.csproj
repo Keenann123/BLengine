@@ -175,12 +175,8 @@
     <None Include="Shaders\default_imgui.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\DeferredDirectional.frag">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Shaders\DeferredDirectional.vert">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Shaders\DeferredLight.frag" />
+    <None Include="Shaders\DeferredLight.vert" />
     <None Include="Shaders\GBuffer.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
