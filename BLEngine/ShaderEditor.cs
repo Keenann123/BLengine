@@ -109,7 +109,8 @@ namespace RenderingEngine.ShaderEditor
         {
             ImDrawListPtr list = ImGui.GetWindowDrawList();
 
-            list.AddCircle(new Vector2(0.5f, 0.5f), 0.5f, 0);
+            list.AddCircle(new Vector2(0.5f, 0.5f), 0.5f, 0, 8, 1.0f);
+            list.AddLine(new Vector2(0.0f, 0.0f), new Vector2(10.0f, 10.0f), 1);
         }
 
         public ShaderNodePinDesc GetPin(int PinIndex)

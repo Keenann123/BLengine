@@ -9,6 +9,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 using static RenderingEngine.ShaderManager;
+using RenderingEngine.ShaderEditor;
 using OpenTK.Input;
 
 namespace RenderingEngine
@@ -16,8 +17,8 @@ namespace RenderingEngine
     public class Window : GameWindow
     {
         ImGuiController _controller;
-        public static int _Width = 1920;
-        public static int _Height = 1080;
+        public static int _Width = 1280;
+        public static int _Height = 720;
         public static double fps;
         MeshComponent[] Meshes = new MeshComponent[10000];
         FullscreenQuad Q;
@@ -33,7 +34,7 @@ namespace RenderingEngine
         float light1Intensity = 1.0f, light2Intensity = 1.0f, light3Intensity = 1.0f;
         float lightRadius = 1000.0f;
         static FullscreenQuad q;
-
+        ShaderEditorGraph graph = new ShaderEditorGraph();
         List<MeshComponent> meshEntries = new List<MeshComponent>();
 
         public Window(GraphicsMode gMode) : base(_Width, _Height, gMode,
@@ -142,7 +143,7 @@ namespace RenderingEngine
             ImGui.End();
             #endregion
 
-
+            graph.RenderGraph((float)e.Time);
             #region Shader Live Coding
             ImGui.Begin("Shader Live Coding");
             ImGui.SetWindowSize(new System.Numerics.Vector2(530, 475), ImGuiCond.Once);
